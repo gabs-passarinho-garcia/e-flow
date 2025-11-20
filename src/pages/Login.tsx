@@ -4,7 +4,7 @@ import { login } from '../services/auth';
 
 /**
  * Login page component
- * Mock login form
+ * Mock login form matching the design
  */
 export default function Login() {
   const navigate = useNavigate();
@@ -29,15 +29,15 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-500 to-primary-700 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-primary-600 px-4 py-8">
       <div className="w-full max-w-md">
-        <div className="card">
+        <div className="bg-white rounded-2xl shadow-2xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">E-Flow</h1>
-            <p className="text-gray-600">Faça login para continuar</p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">E-Flow</h1>
+            <p className="text-gray-600 text-base">Faça login para continuar</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                 Email
@@ -47,7 +47,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="input"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                 placeholder="seu@email.com"
                 required
                 disabled={loading}
@@ -63,7 +63,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="input"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
                 placeholder="••••••••"
                 required
                 disabled={loading}
@@ -71,21 +71,21 @@ export default function Login() {
             </div>
 
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
                 {error}
               </div>
             )}
 
             <button
               type="submit"
-              className="btn-primary w-full"
+              className="w-full bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-gray-600">
+          <div className="mt-6 text-center text-xs text-gray-500">
             <p>Use qualquer email e senha para fazer login (mockado)</p>
           </div>
         </div>

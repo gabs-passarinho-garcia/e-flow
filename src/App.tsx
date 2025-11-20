@@ -10,11 +10,14 @@ import PaymentStatus from './pages/PaymentStatus';
 import ChargingStatus from './pages/ChargingStatus';
 import Success from './pages/Success';
 import { isAuthenticated } from './services/auth';
+import { usePWAInstall } from './hooks/usePWAInstall';
 
 /**
  * Main App component with routing
  */
 function App() {
+  const { showInstallPrompt, installApp } = usePWAInstall();
+
   useEffect(() => {
     // Register service worker for PWA
     const updateSW = registerSW({
@@ -32,6 +35,26 @@ function App() {
       updateSW(true);
     }, 60 * 60 * 1000); // Check every hour
   }, []);
+
+  // Auto-show install prompt when app loads (if not already installed)
+  useEffect(() => {
+    // Only show on first visit, not if already installed
+    const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
+    const hasSeenPrompt = sessionStorage.getItem('pwa-install-prompt-shown');
+
+    if (!isInstalled && !hasSeenPrompt && showInstallPrompt) {
+      // Small delay to ensure page is fully loaded and user sees the app
+      const timer = setTimeout(() => {
+        installApp().then(() => {
+          sessionStorage.setItem('pwa-install-prompt-shown', 'true');
+        }).catch(() => {
+          // User dismissed, don't show again this session
+          sessionStorage.setItem('pwa-install-prompt-shown', 'true');
+        });
+      }, 3000); // 3 seconds delay to let user see the app first
+      return () => clearTimeout(timer);
+    }
+  }, [showInstallPrompt, installApp]);
 
   return (
     <Routes>
