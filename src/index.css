@@ -1,12 +1,11 @@
+/* Leaflet styles - must be imported first */
+@import 'leaflet/dist/leaflet.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  
   body {
     @apply bg-gray-50 text-gray-900;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -55,7 +54,4 @@
     @apply bg-white rounded-xl shadow-lg p-6;
   }
 }
-
-/* Leaflet styles */
-@import 'leaflet/dist/leaflet.css';
 

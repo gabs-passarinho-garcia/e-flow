@@ -281,6 +281,67 @@ O aplicativo usa **Leaflet** com tiles do **OpenStreetMap**. Os mapas são:
 - Fácil manutenção
 - Purge automático (remove CSS não usado)
 
+## 🚀 Deploy na Vercel
+
+O projeto está configurado para deploy automático na Vercel!
+
+### Configuração Automática
+
+O arquivo `vercel.json` já está configurado com:
+
+- **Build Command**: `bun run build:vite` (usa Vite para PWA completo)
+- **Output Directory**: `dist`
+- **Install Command**: `bun install`
+- **Framework**: Vite (detectado automaticamente)
+
+### Deploy Manual
+
+1. **Instale a Vercel CLI** (opcional):
+
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Faça login**:
+
+   ```bash
+   vercel login
+   ```
+
+3. **Deploy**:
+
+   ```bash
+   vercel
+   ```
+
+### Deploy via GitHub/GitLab
+
+1. Conecte seu repositório na Vercel
+2. A Vercel detectará automaticamente as configurações do `vercel.json`
+3. O build será executado automaticamente em cada push
+
+### Configurações na Vercel Dashboard
+
+Se preferir configurar manualmente na interface da Vercel:
+
+- **Framework Preset**: Vite
+- **Build Command**: `bun run build:vite`
+- **Output Directory**: `dist`
+- **Install Command**: `bun install`
+- **Node.js Version**: 18.x ou superior (a Vercel usará Bun automaticamente se disponível)
+
+### Nota sobre Bun na Vercel
+
+A Vercel suporta Bun! Certifique-se de que:
+
+- O `package.json` especifica `"engines": { "bun": "1.3.2" }`
+- O comando de build usa `bunx --bun` ou `bun run`
+
+### Variáveis de Ambiente
+
+Se precisar de variáveis de ambiente no futuro, configure-as no dashboard da Vercel em:
+**Settings → Environment Variables**
+
 ## 🐛 Troubleshooting
 
 ### O mapa não aparece
