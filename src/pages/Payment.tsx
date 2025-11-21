@@ -57,7 +57,6 @@ export default function Payment(): JSX.Element {
     try {
       const method = paymentMethods.find((m) => m.id === selectedMethod);
 
-      // Correção aqui: Sem 'as any', usando tipagem correta
       const finalMethod: PaymentMethod = method || {
         id: selectedMethod,
         type: 'digital_wallet',
@@ -76,7 +75,7 @@ export default function Payment(): JSX.Element {
 
   if (loading || !station) {
     return (
-      <div className="h-[100dvh] flex items-center justify-center bg-gray-100">
+      <div className="h-full flex items-center justify-center bg-gray-100">
         <div className="w-16 h-16 border-4 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -86,11 +85,8 @@ export default function Payment(): JSX.Element {
   const idleFee = 1.8;
 
   return (
-    // 1. Outer Wrapper
-    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
-      {/* 2. Container Principal */}
+    <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
       <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
-        {/* 3. HEADER */}
         <header className="px-6 pt-6 pb-4 flex items-center relative bg-white z-10 flex-shrink-0 border-b border-transparent">
           <button
             onClick={() => navigate('/map')}
@@ -113,10 +109,8 @@ export default function Payment(): JSX.Element {
           <h1 className="text-xl font-bold text-center w-full text-gray-900">Pagamento</h1>
         </header>
 
-        {/* 4. CONTEÚDO */}
         <div className="flex-1 overflow-y-auto px-6 py-2 scroll-smooth min-h-0">
           <div className="flex flex-col gap-6 pb-6">
-            {/* Cards de Informação */}
             <div className="space-y-3">
               <div className="border border-gray-200 rounded-2xl p-4 flex items-center justify-between shadow-sm bg-gray-50/50">
                 <div className="flex items-center gap-3 text-gray-500">
@@ -157,7 +151,6 @@ export default function Payment(): JSX.Element {
               </div>
             </div>
 
-            {/* Estação */}
             <div className="flex items-center justify-between py-2">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center text-gray-600">
@@ -182,7 +175,6 @@ export default function Payment(): JSX.Element {
               </div>
             </div>
 
-            {/* Cupom */}
             <div className="flex gap-3">
               <div className="flex-1 border border-gray-300 rounded-xl px-4 py-3.5 flex items-center gap-2 bg-white focus-within:border-primary-400 transition-colors">
                 <svg
@@ -207,7 +199,6 @@ export default function Payment(): JSX.Element {
               </button>
             </div>
 
-            {/* Métodos de Pagamento */}
             <div>
               <div className="flex justify-between items-center mb-4">
                 <h3 className="text-gray-500 font-semibold text-sm uppercase tracking-wider">
@@ -219,7 +210,6 @@ export default function Payment(): JSX.Element {
               </div>
 
               <div className="space-y-3">
-                {/* Métodos Salvos */}
                 {paymentMethods.map((method) => (
                   <label
                     key={method.id}
@@ -274,8 +264,6 @@ export default function Payment(): JSX.Element {
                   </label>
                 ))}
 
-                {/* Carteiras Digitais (Apple/Google) */}
-                {/* Apple Pay */}
                 <label
                   className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all active:scale-[0.99] ${
                     selectedMethod === PAYMENT_METHOD_APPLE
@@ -285,7 +273,6 @@ export default function Payment(): JSX.Element {
                 >
                   <div className="flex-1 flex items-center gap-3">
                     <div className="w-8 h-8 flex items-center justify-center">
-                      {/* Apple Logo SVG */}
                       <svg viewBox="0 0 384 512" className="w-5 h-5 fill-current text-black">
                         <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 52.3-11.4 69.5-34.3z" />
                       </svg>
@@ -317,7 +304,6 @@ export default function Payment(): JSX.Element {
                   />
                 </label>
 
-                {/* Google Pay */}
                 <label
                   className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all active:scale-[0.99] ${
                     selectedMethod === PAYMENT_METHOD_GOOGLE
@@ -327,7 +313,6 @@ export default function Payment(): JSX.Element {
                 >
                   <div className="flex-1 flex items-center gap-3">
                     <div className="w-8 h-8 flex items-center justify-center">
-                      {/* Google 'G' Logo SVG */}
                       <svg viewBox="0 0 24 24" className="w-5 h-5">
                         <path
                           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -378,8 +363,7 @@ export default function Payment(): JSX.Element {
           </div>
         </div>
 
-        {/* 5. FOOTER */}
-        <div className="flex-shrink-0 p-6 bg-white border-t border-gray-50 z-20">
+        <div className="flex-shrink-0 p-6 pb-10 sm:pb-6 bg-white border-t border-gray-50 z-20">
           <div className="flex justify-between items-center mb-4 px-1">
             <span className="text-gray-500 text-sm">Total estimado</span>
             <span className="text-2xl font-black text-gray-900">R$ 35,40</span>

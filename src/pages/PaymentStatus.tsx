@@ -32,11 +32,10 @@ export default function PaymentStatus(): JSX.Element {
   };
 
   return (
-    // Outer Wrapper: Ocupa 100% da altura real da janela
-    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
-      {/* Container Principal (Frame) */}
+    // Container ajustado com h-full e overflow-hidden para layout mobile perfeito
+    <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
       <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
-        {/* 1. HEADER */}
+        {/* HEADER */}
         <header className="px-6 pt-6 flex justify-start flex-shrink-0">
           <button
             type="button"
@@ -59,8 +58,8 @@ export default function PaymentStatus(): JSX.Element {
           </button>
         </header>
 
-        {/* 2. CONTEÚDO PRINCIPAL */}
-        <div className="flex-1 flex flex-col justify-evenly items-center px-6 w-full h-full pb-6">
+        {/* CONTEÚDO PRINCIPAL - Padding seguro pb-10 */}
+        <div className="flex-1 flex flex-col justify-evenly items-center px-6 w-full h-full pb-10 sm:pb-6">
           {/* Título */}
           <div className="text-center flex-shrink-0">
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
@@ -100,7 +99,6 @@ export default function PaymentStatus(): JSX.Element {
               type="button"
               onClick={handleStartSession}
               disabled={isLoading}
-              // REMOVIDO: a classe 'block' que conflitava com 'flex'
               className="w-full max-w-[280px] bg-primary-400 text-black font-bold text-lg sm:text-xl py-3 sm:py-4 rounded-full shadow-lg hover:brightness-95 transition-all mx-auto active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (

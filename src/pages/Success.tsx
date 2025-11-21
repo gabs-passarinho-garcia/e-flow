@@ -6,10 +6,6 @@ import { getStationById } from '../services/stations';
 import type { ChargingSession, Payment, Station } from '../types';
 import { storage } from '../utils/storage';
 
-/**
- * Success page component
- * Shows charging session summary
- */
 export default function Success(): JSX.Element {
   const navigate = useNavigate();
   const [session, setSession] = useState<ChargingSession | null>(null);
@@ -17,9 +13,6 @@ export default function Success(): JSX.Element {
   const [station, setStation] = useState<Station | null>(null);
   const [loading, setLoading] = useState(true);
 
-  /**
-   * Convert string date to Date object
-   */
   const parseDate = (date: Date | string | undefined): Date | null => {
     if (!date) return null;
     if (date instanceof Date) return date;
@@ -74,10 +67,9 @@ export default function Success(): JSX.Element {
     navigate('/map');
   };
 
-  // Helpers de renderização
   if (loading) {
     return (
-      <div className="h-[100dvh] flex items-center justify-center bg-gray-100">
+      <div className="h-full flex items-center justify-center bg-gray-100">
         <div className="w-16 h-16 border-4 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -85,7 +77,7 @@ export default function Success(): JSX.Element {
 
   if (!session) {
     return (
-      <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4">
+      <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4">
         <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col items-center justify-center p-8 shadow-2xl overflow-hidden">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Sessão não encontrada</h2>
           <button
@@ -99,9 +91,6 @@ export default function Success(): JSX.Element {
     );
   }
 
-  /**
-   * Calculate duration safely
-   */
   const calculateDuration = (): number => {
     if (!session) return 0;
 
@@ -128,20 +117,15 @@ export default function Success(): JSX.Element {
   const duration = calculateDuration();
 
   return (
-    // 1. Outer Wrapper (App Shell)
-    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
-      {/* 2. Container Principal */}
+    <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
       <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
-        {/* 3. HEADER (Transparente aqui para dar destaque ao ícone) */}
         <header className="px-6 pt-8 flex justify-center flex-shrink-0">
           <span className="text-xs font-bold tracking-widest text-gray-400 uppercase">
             Resumo da Recarga
           </span>
         </header>
 
-        {/* 4. CONTEÚDO (Scrollável) */}
         <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth min-h-0 flex flex-col items-center">
-          {/* Ícone de Sucesso Animado */}
           <div className="my-6 relative">
             <div className="w-24 h-24 bg-primary-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(217,248,4,0.4)] animate-bounce-slow">
               <svg
@@ -165,13 +149,10 @@ export default function Success(): JSX.Element {
             Seu veículo está carregado e pronto para rodar.
           </p>
 
-          {/* Card de Recibo (Ticket) */}
           <div className="w-full bg-gray-50 rounded-3xl p-6 border border-gray-100 relative">
-            {/* Detalhe visual de "ticket" (corte circular) - Opcional, mas fica charmoso */}
             <div className="absolute -left-3 top-1/2 w-6 h-6 bg-white rounded-full border-r border-gray-100 transform -translate-y-1/2"></div>
             <div className="absolute -right-3 top-1/2 w-6 h-6 bg-white rounded-full border-l border-gray-100 transform -translate-y-1/2"></div>
 
-            {/* Estação */}
             {station && (
               <div className="text-center mb-6 pb-6 border-b border-dashed border-gray-300">
                 <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">
@@ -182,7 +163,6 @@ export default function Success(): JSX.Element {
               </div>
             )}
 
-            {/* Grid de Detalhes */}
             <div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-6">
               <div>
                 <p className="text-xs text-gray-400 mb-1">Energia</p>
@@ -199,7 +179,6 @@ export default function Success(): JSX.Element {
               </div>
             </div>
 
-            {/* Total */}
             {payment && (
               <div className="bg-white rounded-2xl p-4 border border-gray-200 flex justify-between items-center">
                 <span className="font-medium text-gray-600">Total Pago</span>
@@ -211,8 +190,7 @@ export default function Success(): JSX.Element {
           </div>
         </div>
 
-        {/* 5. FOOTER (Botão Fixo) */}
-        <div className="flex-shrink-0 p-6 bg-white border-t border-gray-50 z-20">
+        <div className="flex-shrink-0 p-6 pb-10 sm:pb-6 bg-white border-t border-gray-50 z-20">
           <button
             onClick={handleBackToMap}
             className="w-full bg-black text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:bg-gray-800 transition-all active:scale-95 flex items-center justify-center gap-2"
