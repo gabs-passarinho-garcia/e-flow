@@ -51,6 +51,7 @@ export default function ChargingStatus() {
   };
 
   const handleCancel = async () => {
+    // Usando window.confirm simples por enquanto, mas idealmente seria um modal do design system
     if (!confirm('Tem certeza que deseja cancelar o carregamento?')) {
       return;
     }
@@ -68,98 +69,98 @@ export default function ChargingStatus() {
 
   if (loading || !session) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
+      <div className="h-[100dvh] flex items-center justify-center bg-gray-100">
+        <div className="w-16 h-16 border-4 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white shadow-sm px-4 py-4">
-        <h1 className="text-xl font-bold text-gray-900">Carregamento em Andamento</h1>
-      </header>
+    // 1. Outer Wrapper (Padrão App Shell)
+    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
+      
+      {/* 2. Container Principal (Frame) */}
+      <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
+        
+        {/* 3. HEADER (Fixo) */}
+        <header className="px-6 pt-8 pb-4 flex items-center justify-center relative bg-white z-10 flex-shrink-0">
+          <h1 className="text-lg font-bold text-gray-900">Carregamento em Andamento</h1>
+        </header>
 
-      <div className="flex-1 flex items-center justify-center px-4 py-8">
-        <div className="w-full max-w-md">
-          <div className="card text-center space-y-8">
-            {/* Battery Icon */}
-            <div className="relative">
-              <div className="w-48 h-32 mx-auto border-4 border-gray-300 rounded-lg relative overflow-hidden">
-                <div
-                  className="absolute bottom-0 left-0 right-0 bg-primary-600 transition-all duration-500"
-                  style={{ height: `${session.currentBattery}%` }}
-                />
-                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-                  <span className="text-4xl font-bold text-gray-900">
-                    {session.currentBattery}%
-                  </span>
+        {/* 4. CONTEÚDO (Scrollável e Centralizado) */}
+        <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth min-h-0 flex flex-col items-center justify-center">
+          
+          {/* Card Principal (Sombra Suave) */}
+          <div className="w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 flex flex-col items-center">
+            
+            {/* Bateria / Monitor Visual */}
+            <div className="mb-8 relative">
+                {/* Moldura da Tela */}
+                <div className="w-48 h-32 border-[6px] border-gray-500 rounded-xl relative overflow-hidden bg-white flex items-center justify-center z-10">
+                    {/* Nível de Fluido (Bateria) */}
+                    <div 
+                        className="absolute bottom-0 left-0 right-0 bg-primary-400 transition-all duration-1000 ease-in-out opacity-90"
+                        style={{ height: `${session.currentBattery}%` }}
+                    />
+                    {/* Texto da Porcentagem */}
+                    <span className="text-4xl font-black text-gray-900 z-20 relative mix-blend-multiply">
+                        {Math.round(session.currentBattery)}%
+                    </span>
                 </div>
-              </div>
-              {/* Battery terminal */}
-              <div className="w-8 h-4 bg-gray-300 mx-auto -mt-1 rounded-t"></div>
+                {/* Pé do Monitor */}
+                <div className="w-12 h-4 bg-gray-400 mx-auto rounded-b-lg -mt-1 opacity-80"></div>
             </div>
 
-            {/* Status Info */}
-            <div className="space-y-4">
-              <div>
-                <p className="text-sm text-gray-600 mb-1">Status</p>
-                <p className="text-lg font-semibold text-gray-900">
-                  {session.status === 'starting' && 'Iniciando...'}
-                  {session.status === 'charging' && 'Carregando...'}
-                  {session.status === 'completed' && 'Concluído!'}
+            {/* Status Text */}
+            <div className="text-center mb-8 space-y-1">
+                <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">Status</span>
+                <h2 className="text-2xl font-bold text-gray-900">
+                    {session.status === 'starting' && 'Iniciando...'}
+                    {session.status === 'charging' && 'Carregando...'}
+                    {session.status === 'completed' && 'Finalizando...'}
+                </h2>
+            </div>
+
+            {/* Grid de Informações */}
+            <div className="grid grid-cols-2 gap-8 w-full mb-8 px-2">
+                <div className="flex flex-col items-center">
+                    <span className="text-gray-400 text-xs font-medium mb-1">Energia Entregue</span>
+                    <span className="text-xl font-black text-gray-900">{session.energyDelivered.toFixed(1)} kWh</span>
+                </div>
+                <div className="flex flex-col items-center border-l border-gray-100">
+                    <span className="text-gray-400 text-xs font-medium mb-1">Tempo Restante</span>
+                    <span className="text-xl font-black text-gray-900">{Math.round(session.estimatedTimeRemaining)} min</span>
+                </div>
+            </div>
+
+            {/* Barra de Progresso Linear */}
+            <div className="w-full space-y-2">
+                <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <div 
+                        className="h-full bg-primary-400 rounded-full transition-all duration-1000 ease-out"
+                        style={{ width: `${session.currentBattery}%` }}
+                    />
+                </div>
+                <p className="text-center text-xs text-gray-400 font-medium">
+                    {Math.round(session.currentBattery)}% completo
                 </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Energia Entregue</p>
-                  <p className="text-xl font-bold text-gray-900">
-                    {session.energyDelivered.toFixed(1)} kWh
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm text-gray-600 mb-1">Tempo Restante</p>
-                  <p className="text-xl font-bold text-gray-900">
-                    {session.estimatedTimeRemaining} min
-                  </p>
-                </div>
-              </div>
             </div>
 
-            {/* Progress Bar */}
-            <div>
-              <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
-                <div
-                  className="bg-primary-600 h-4 rounded-full transition-all duration-500"
-                  style={{ width: `${session.currentBattery}%` }}
-                />
-              </div>
-              <p className="text-sm text-gray-600">
-                {session.currentBattery}% completo
-              </p>
-            </div>
-
-            {/* Cancel Button */}
-            {session.status === 'charging' && (
-              <button
-                onClick={handleCancel}
-                disabled={cancelling}
-                className="btn-danger w-full"
-              >
-                {cancelling ? 'Cancelando...' : 'Cancelar Carregamento'}
-              </button>
-            )}
-
-            {session.status === 'completed' && (
-              <div className="text-green-600 font-semibold">
-                Carregamento concluído com sucesso!
-              </div>
-            )}
           </div>
         </div>
+
+        {/* 5. FOOTER (Botão Cancelar) */}
+        <div className="flex-shrink-0 p-6 bg-white z-20">
+            <button
+                onClick={handleCancel}
+                disabled={cancelling || session.status === 'completed'}
+                className="w-full bg-red-50 text-red-500 font-bold text-lg py-4 rounded-2xl hover:bg-red-100 active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+                {cancelling ? 'Cancelando...' : 'Cancelar Carregamento'}
+            </button>
+        </div>
+
       </div>
     </div>
   );
 }
-

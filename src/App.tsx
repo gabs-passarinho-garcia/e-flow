@@ -4,7 +4,7 @@ import { registerSW } from 'virtual:pwa-register';
 import Splash from './pages/Splash';
 import Login from './pages/Login';
 import MapView from './pages/MapView';
-import StationDetail from './pages/StationDetail';
+// StationDetail removido daqui
 import Payment from './pages/Payment';
 import PaymentStatus from './pages/PaymentStatus';
 import ChargingStatus from './pages/ChargingStatus';
@@ -68,14 +68,7 @@ function App() {
           </ProtectedRoute>
         }
       />
-      <Route
-        path="/station/:id"
-        element={
-          <ProtectedRoute>
-            <StationDetail />
-          </ProtectedRoute>
-        }
-      />
+      {/* Rota /station/:id removida */}
       <Route
         path="/payment/:stationId"
         element={
@@ -124,4 +117,3 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 }
 
 export default App;
-

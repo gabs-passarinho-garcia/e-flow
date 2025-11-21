@@ -1,141 +1,115 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPaymentById } from '../services/payment';
 import { startCharging } from '../services/charging';
-import { getCurrentUser } from '../services/auth';
 import { storage } from '../utils/storage';
 import type { Payment } from '../types';
 
-/**
- * Payment status page component
- * Shows payment confirmation and starts charging
- */
 export default function PaymentStatus() {
   const navigate = useNavigate();
-  const [payment, setPayment] = useState<Payment | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [starting, setStarting] = useState(false);
-  const user = getCurrentUser();
+  const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    loadPayment();
-  }, []);
-
-  const loadPayment = async () => {
+  const handleStartSession = async () => {
+    setIsLoading(true);
     try {
-      const paymentData = storage.getPayment<Payment>();
-      if (paymentData) {
-        setPayment(paymentData);
-        
-        // Auto-start charging after 2 seconds
-        setTimeout(() => {
-          handleStartCharging();
-        }, 2000);
+      // Recupera o último pagamento para pegar os IDs necessários
+      const lastPayment = storage.getPayment<Payment>();
+
+      if (!lastPayment) {
+        console.error("Pagamento não encontrado");
+        navigate('/map'); // Fallback de segurança
+        return;
       }
-    } catch (error) {
-      console.error('Error loading payment:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const handleStartCharging = async () => {
-    if (!payment || !user || starting) return;
+      // O Pulo do Gato: Inicia a sessão efetivamente antes de navegar
+      await startCharging(
+        lastPayment.stationId,
+        lastPayment.userId,
+        lastPayment.id
+      );
 
-    setStarting(true);
-
-    try {
-      await startCharging(payment.stationId, user.id, payment.id);
       navigate('/charging');
     } catch (error) {
-      console.error('Error starting charging:', error);
+      console.error("Erro ao iniciar sessão:", error);
     } finally {
-      setStarting(false);
+      setIsLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="w-full max-w-md">
-        <div className="card text-center">
-          {payment?.status === 'completed' ? (
-            <>
-              <div className="mb-6">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-12 h-12 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Pagamento Aprovado!
-                </h2>
-                <p className="text-gray-600 mb-4">
-                  R$ {payment.amount.toFixed(2)} processado com sucesso
-                </p>
-              </div>
+    // Outer Wrapper: Ocupa 100% da altura real da janela
+    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
+      
+      {/* Container Principal (Frame) */}
+      <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
+        
+        {/* 1. HEADER */}
+        <header className="px-6 pt-6 flex justify-start flex-shrink-0">
+          <button 
+            type="button" 
+            aria-label="Voltar para o mapa"
+            onClick={() => navigate('/map')} 
+            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+          </button>
+        </header>
 
-              {starting ? (
-                <div className="space-y-4">
-                  <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="text-gray-600">Iniciando carregamento...</p>
-                </div>
-              ) : (
-                <button
-                  onClick={handleStartCharging}
-                  className="btn-primary w-full"
-                >
-                  Iniciar Carregamento
-                </button>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="mb-6">
-                <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-12 h-12 text-yellow-600 animate-spin"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A9.001 9.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a9.003 9.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Processando Pagamento...
-                </h2>
-                <p className="text-gray-600">
-                  Aguarde enquanto processamos seu pagamento
-                </p>
-              </div>
-            </>
-          )}
+        {/* 2. CONTEÚDO PRINCIPAL */}
+        <div className="flex-1 flex flex-col justify-evenly items-center px-6 w-full h-full pb-6"> 
+
+            {/* Título */}
+            <div className="text-center flex-shrink-0">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
+                  Pagamento<br />Aprovado!
+                </h1>
+            </div>
+            
+            {/* Área da Imagem */}
+            <div className="flex-shrink-1 flex items-center justify-center w-full min-h-0">
+                <img 
+                    src="/assets/svg/approved-payment-icon.svg" 
+                    alt="Ilustração de Carregamento Aprovado" 
+                    className="w-auto h-auto max-h-[35vh] sm:max-h-[40vh] object-contain drop-shadow-sm"
+                />
+            </div>
+
+            {/* Mensagem Card */}
+            <div className="w-full border border-gray-200 rounded-3xl p-4 sm:p-5 bg-white shadow-sm flex-shrink-0">
+              <p className="text-gray-700 font-medium text-sm sm:text-base leading-relaxed text-center">
+                Tudo pronto!<br />
+                <span className="font-bold text-black">Seu carregador foi liberado.</span>
+              </p>
+            </div>
+
+            {/* Footer / Botão */}
+            <div className="w-full flex-shrink-0 text-center space-y-3 sm:space-y-4">
+              <p className="text-gray-500 text-xs sm:text-sm">
+                Conecte o cabo ao seu veículo<br />
+                para iniciar a recarga na <span className="font-bold text-black">E-FLOW!</span>
+              </p>
+              
+              <button
+                type="button"
+                onClick={handleStartSession}
+                disabled={isLoading}
+                // REMOVIDO: a classe 'block' que conflitava com 'flex'
+                className="w-full max-w-[280px] bg-primary-400 text-black font-bold text-lg sm:text-xl py-3 sm:py-4 rounded-full shadow-lg hover:brightness-95 transition-all mx-auto active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isLoading ? (
+                  <>
+                    <svg className="animate-spin h-5 w-5 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Iniciando...
+                  </>
+                ) : (
+                  'Acompanhar Carregamento'
+                )}
+              </button>
+            </div>
         </div>
       </div>
     </div>
   );
 }
-

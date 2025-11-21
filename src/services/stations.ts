@@ -78,6 +78,43 @@ const MOCK_STATIONS: Station[] = [
     pricePerKwh: 0.70,
     rating: 4.7,
   },
+  // NOVAS ESTAÇÕES ABC PAULISTA
+  {
+    id: '7',
+    name: 'Estação Shopping Grand Plaza',
+    address: 'Av. Industrial, 600 - Jardim, Santo André - SP',
+    latitude: -23.6599, // Perto de Santo André (sua cidade! 😉)
+    longitude: -46.5367,
+    available: true,
+    connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)'],
+    power: 75,
+    pricePerKwh: 0.95,
+    rating: 4.4,
+  },
+  {
+    id: '8',
+    name: 'Estação Shopping Metrópole',
+    address: 'Pça. Samuel Sabatini, 200 - Centro, São Bernardo do Campo - SP',
+    latitude: -23.6896, // Perto de São Bernardo (sua cidade natal!)
+    longitude: -46.5670,
+    available: false, // Deixando indisponível pra testar o filtro
+    connectorType: ['CCS (Combo)', 'CHAdeMO'],
+    power: 100,
+    pricePerKwh: 1.10,
+    rating: 4.9,
+  },
+  {
+    id: '9',
+    name: 'Estação Park Shopping São Caetano',
+    address: 'Estrada das Lágrimas, 855 - São José, São Caetano do Sul - SP',
+    latitude: -23.6300, 
+    longitude: -46.5510,
+    available: true,
+    connectorType: ['Type 2 (Mennekes)'],
+    power: 22,
+    pricePerKwh: 0.80,
+    rating: 4.1,
+  },
 ];
 
 /**
@@ -104,4 +141,3 @@ export const getAvailableStations = async (): Promise<Station[]> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
   return MOCK_STATIONS.filter((station) => station.available);
 };
-
