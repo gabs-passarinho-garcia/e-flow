@@ -7,7 +7,7 @@ import type { Station } from '../types';
 // Importar o novo Drawer
 import StationDrawer from '../components/StationDrawer';
 
-// Ícone Preto das Estações (Ajustado para ser mais nítido)
+// Ícone Preto das Estações
 const BlackPinIcon = L.divIcon({
   className: 'custom-marker',
   html: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.3));">
@@ -19,7 +19,7 @@ const BlackPinIcon = L.divIcon({
   popupAnchor: [0, -48],
 });
 
-// Marcador E= (Localização Atual - Estilo "Pulse")
+// Marcador E= (Localização Atual)
 const UserLocationIcon = L.divIcon({
   className: 'user-marker',
   html: `<div class="relative w-16 h-16 flex items-center justify-center">
@@ -38,13 +38,12 @@ export default function MapView(): JSX.Element {
   const [isRouting, setIsRouting] = useState(false);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
 
-  // Coordenadas para simular a rota roxa
   const routeCoordinates: [number, number][] = [
-    [-23.5925, -46.5333], // Ponto A
+    [-23.5925, -46.5333],
     [-23.59, -46.53],
     [-23.588, -46.525],
     [-23.585, -46.525],
-    [-23.582, -46.528], // Ponto B
+    [-23.582, -46.528],
   ];
 
   useEffect(() => {
@@ -54,7 +53,8 @@ export default function MapView(): JSX.Element {
   const toggleRouteMode = (): void => setIsRouting(!isRouting);
 
   return (
-    <div className="h-screen w-full relative overflow-hidden bg-gray-100">
+    // CORREÇÃO: h-[100dvh] para garantir que o mapa ocupe exatamente a área visível
+    <div className="h-[100dvh] w-full relative overflow-hidden bg-gray-100">
       <MapContainer
         center={[-23.5925, -46.5333]}
         zoom={15}
@@ -95,21 +95,17 @@ export default function MapView(): JSX.Element {
         )}
       </MapContainer>
 
-      {/* Drawer de Detalhes */}
       {selectedStation && (
         <StationDrawer station={selectedStation} onClose={() => setSelectedStation(null)} />
       )}
 
-      {/* === UI FLUTUANTE SOBRE O MAPA === */}
-
-      {/* 1. Botões Laterais (Direita) */}
+      {/* === UI FLUTUANTE === */}
       <div className="absolute right-5 bottom-48 flex flex-col gap-3 z-[900]">
         <button
           type="button"
           aria-label="Configurações do mapa"
           className="w-12 h-12 bg-white rounded-full shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-90 transition-all"
         >
-          {/* Ícone de Ajustes/Filtro */}
           <svg
             width="24"
             height="24"
@@ -136,7 +132,6 @@ export default function MapView(): JSX.Element {
           aria-label="Minha localização"
           className="w-12 h-12 bg-white rounded-full shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-90 transition-all"
         >
-          {/* Ícone de Mira GPS */}
           <svg
             width="24"
             height="24"
@@ -153,26 +148,21 @@ export default function MapView(): JSX.Element {
         </button>
       </div>
 
-      {/* 2. Chips de Filtro (Acima da Barra Inferior) - NOVO! */}
+      {/* Chips de Filtro */}
       <div className="absolute bottom-32 left-0 right-0 z-[900] flex gap-3 overflow-x-auto px-6 pb-2 no-scrollbar snap-x">
-        {/* Chip Ativo (Borda Azul) */}
         <button className="snap-start flex-shrink-0 bg-white border-2 border-[#2E9AFF] text-[#2E9AFF] font-bold px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform">
           Traçar rota
         </button>
-
-        {/* Chips Normais */}
         <button className="snap-start flex-shrink-0 bg-white text-gray-600 font-medium px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform border border-transparent hover:border-gray-200">
           Planejar Viagem
         </button>
-
         <button className="snap-start flex-shrink-0 bg-white text-gray-600 font-medium px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform border border-transparent hover:border-gray-200">
           Carregadores
         </button>
       </div>
 
-      {/* 3. Barra de Navegação Inferior (Ícones Ajustados) */}
+      {/* Barra de Navegação Inferior */}
       <div className="absolute bottom-8 left-6 right-6 h-20 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.12)] z-[1000] grid grid-cols-4 items-center px-2">
-        {/* Início - Ícone de Carro */}
         <button
           type="button"
           className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full"
@@ -195,7 +185,6 @@ export default function MapView(): JSX.Element {
           <span className="text-[10px] font-bold">Início</span>
         </button>
 
-        {/* Estações - Ícone de Plug */}
         <button
           type="button"
           className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full"
@@ -215,7 +204,6 @@ export default function MapView(): JSX.Element {
           <span className="text-[10px] font-bold">Estações</span>
         </button>
 
-        {/* Botão Central (Mapa) - Destaque Amarelo */}
         <div className="relative -top-1">
           <button
             type="button"
@@ -240,7 +228,6 @@ export default function MapView(): JSX.Element {
           </button>
         </div>
 
-        {/* Perfil - Ícone de Usuário */}
         <button
           type="button"
           className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full"

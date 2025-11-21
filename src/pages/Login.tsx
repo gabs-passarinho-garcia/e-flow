@@ -22,23 +22,24 @@ export default function Login(): JSX.Element {
   };
 
   return (
-    // Container principal: Garante que a página toda possa rolar.
-    <div className="min-h-screen flex flex-col items-center bg-white w-full overflow-y-auto px-4 sm:px-8">
+    // CORREÇÃO: min-h-[100dvh] garante que a altura respeite as barras do navegador
+    // pb-12 adiciona um respiro seguro no rodapé
+    <div className="min-h-[100dvh] flex flex-col items-center bg-white w-full px-4 sm:px-8 py-8 pb-12">
       {/* Dots de Progresso Decorativos */}
-      <div className="flex justify-center gap-3 pt-8 mb-12 w-full max-w-sm" aria-hidden="true">
+      <div className="flex justify-center gap-3 mb-8 w-full max-w-sm shrink-0" aria-hidden="true">
         <div className="w-3 h-3 rounded-full bg-primary-400"></div>
         <div className="w-3 h-3 rounded-full bg-secondary-purple"></div>
         <div className="w-3 h-3 rounded-full bg-secondary-orange"></div>
         <div className="w-3 h-3 rounded-full bg-secondary-blue opacity-50"></div>
       </div>
 
-      {/* Container do Formulário */}
-      <div className="w-full max-w-sm flex flex-col flex-1 mx-auto pb-8">
-        <div className="text-center mb-10 w-full">
-          <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+      {/* Container do Formulário (flex-1 para ocupar espaço e centralizar se sobrar tela) */}
+      <div className="w-full max-w-sm flex flex-col flex-1 justify-center mx-auto">
+        <div className="text-center mb-8 w-full">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-3 tracking-tight">
             Crie uma conta
           </h1>
-          <p className="text-gray-500 font-medium">
+          <p className="text-gray-500 font-medium text-sm leading-relaxed">
             Isso leva menos de um minuto.
             <br />
             Entre com seu e-mail e senha.
@@ -94,15 +95,12 @@ export default function Login(): JSX.Element {
                 alt=""
                 aria-hidden="true"
               />
-              <span className="text-gray-600 font-medium text-sm">
-                Continue com sua conta Google
-              </span>
+              <span className="text-gray-600 font-medium text-sm">Google</span>
             </button>
             <button
               type="button"
               className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-gray-300 rounded-2xl hover:bg-gray-50 transition-colors"
             >
-              {/* Ícone da Microsoft - AGORA É SVG INLINE */}
               <svg
                 className="w-5 h-5"
                 viewBox="0 0 24 24"
@@ -115,19 +113,16 @@ export default function Login(): JSX.Element {
                 <rect x="1" y="13" width="10" height="10" fill="#00A4EF" />
                 <rect x="13" y="13" width="10" height="10" fill="#FFB900" />
               </svg>
-              <span className="text-gray-600 font-medium text-sm">
-                Continue com sua conta Microsoft
-              </span>
+              <span className="text-gray-600 font-medium text-sm">Microsoft</span>
             </button>
             <button
               type="button"
               className="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-black text-white rounded-2xl hover:bg-gray-800 transition-colors"
             >
-              {/* Ícone Apple */}
               <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.74.62 3.48 1.56-3.17 1.63-2.66 5.76.36 7.1-.71 1.73-1.69 3.41-2.43 4.37zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z" />
               </svg>
-              <span className="text-white font-medium text-sm">Continue com sua conta Apple</span>
+              <span className="text-white font-medium text-sm">Apple</span>
             </button>
           </div>
         </form>

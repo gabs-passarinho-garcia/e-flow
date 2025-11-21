@@ -52,7 +52,6 @@ export default function ChargingStatus(): JSX.Element {
   }, [navigate]);
 
   const handleCancel = async (): Promise<void> => {
-    // Usando window.confirm simples por enquanto, mas idealmente seria um modal do design system
     if (!confirm('Tem certeza que deseja cancelar o carregamento?')) {
       return;
     }
@@ -77,38 +76,34 @@ export default function ChargingStatus(): JSX.Element {
   }
 
   return (
-    // 1. Outer Wrapper (Padrão App Shell)
+    // Outer Wrapper
     <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
-      {/* 2. Container Principal (Frame) */}
+      {/* Container Principal */}
       <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
-        {/* 3. HEADER (Fixo) */}
+        {/* HEADER (Fixo) */}
         <header className="px-6 pt-8 pb-4 flex items-center justify-center relative bg-white z-10 flex-shrink-0">
           <h1 className="text-lg font-bold text-gray-900">Carregamento em Andamento</h1>
         </header>
 
-        {/* 4. CONTEÚDO (Scrollável e Centralizado) */}
+        {/* CONTEÚDO */}
         <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth min-h-0 flex flex-col items-center justify-center">
-          {/* Card Principal (Sombra Suave) */}
+          {/* Card Principal */}
           <div className="w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 flex flex-col items-center">
-            {/* Bateria / Monitor Visual */}
+            {/* Bateria */}
             <div className="mb-8 relative">
-              {/* Moldura da Tela */}
               <div className="w-48 h-32 border-[6px] border-gray-500 rounded-xl relative overflow-hidden bg-white flex items-center justify-center z-10">
-                {/* Nível de Fluido (Bateria) */}
                 <div
                   className="absolute bottom-0 left-0 right-0 bg-primary-400 transition-all duration-1000 ease-in-out opacity-90"
                   style={{ height: `${session.currentBattery}%` }}
                 />
-                {/* Texto da Porcentagem */}
                 <span className="text-4xl font-black text-gray-900 z-20 relative mix-blend-multiply">
                   {Math.round(session.currentBattery)}%
                 </span>
               </div>
-              {/* Pé do Monitor */}
               <div className="w-12 h-4 bg-gray-400 mx-auto rounded-b-lg -mt-1 opacity-80"></div>
             </div>
 
-            {/* Status Text */}
+            {/* Status */}
             <div className="text-center mb-8 space-y-1">
               <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">
                 Status
@@ -120,7 +115,7 @@ export default function ChargingStatus(): JSX.Element {
               </h2>
             </div>
 
-            {/* Grid de Informações */}
+            {/* Info */}
             <div className="grid grid-cols-2 gap-8 w-full mb-8 px-2">
               <div className="flex flex-col items-center">
                 <span className="text-gray-400 text-xs font-medium mb-1">Energia Entregue</span>
@@ -136,7 +131,7 @@ export default function ChargingStatus(): JSX.Element {
               </div>
             </div>
 
-            {/* Barra de Progresso Linear */}
+            {/* Barra de Progresso */}
             <div className="w-full space-y-2">
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
@@ -151,8 +146,8 @@ export default function ChargingStatus(): JSX.Element {
           </div>
         </div>
 
-        {/* 5. FOOTER (Botão Cancelar) */}
-        <div className="flex-shrink-0 p-6 bg-white z-20">
+        {/* FOOTER: Adicionado pb-10 */}
+        <div className="flex-shrink-0 p-6 pb-10 sm:pb-6 bg-white z-20">
           <button
             onClick={handleCancel}
             disabled={cancelling || session.status === 'completed'}
