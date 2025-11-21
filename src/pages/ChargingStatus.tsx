@@ -37,7 +37,6 @@ export default function ChargingStatus(): JSX.Element {
     const unsubscribe = onChargingProgress((updatedSession) => {
       setSession(updatedSession);
 
-      // Navigate to success when complete
       if (updatedSession.status === 'completed') {
         setTimeout(() => {
           navigate('/success');
@@ -48,7 +47,6 @@ export default function ChargingStatus(): JSX.Element {
     return (): void => {
       unsubscribe();
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [navigate]);
 
   const handleCancel = async (): Promise<void> => {
@@ -76,31 +74,129 @@ export default function ChargingStatus(): JSX.Element {
   }
 
   return (
-    // CORREÇÃO: h-full para se ajustar ao container pai
     <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
-      {/* Container Principal */}
       <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
-        {/* HEADER (Fixo) */}
+        {/* HEADER */}
         <header className="px-6 pt-8 pb-4 flex items-center justify-center relative bg-white z-10 flex-shrink-0">
           <h1 className="text-lg font-bold text-gray-900">Carregamento em Andamento</h1>
         </header>
 
-        {/* CONTEÚDO (Scrollável) */}
+        {/* CONTEÚDO */}
         <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth min-h-0 flex flex-col items-center justify-center">
-          {/* Card Principal */}
-          <div className="w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 flex flex-col items-center">
-            {/* Bateria / Monitor Visual */}
-            <div className="mb-8 relative">
-              <div className="w-48 h-32 border-[6px] border-gray-500 rounded-xl relative overflow-hidden bg-white flex items-center justify-center z-10">
-                <div
-                  className="absolute bottom-0 left-0 right-0 bg-primary-400 transition-all duration-1000 ease-in-out opacity-90"
-                  style={{ height: `${session.currentBattery}%` }}
+          {/* CARD DE STATUS */}
+          <div className="w-full bg-white rounded-3xl border border-gray-100 p-8 flex flex-col items-center shadow-sm">
+            {/* === VISUALIZAÇÃO DO CARRO (SVG OTIMIZADO) === */}
+            <div className="relative w-full h-48 flex items-center justify-center mb-6">
+              <svg
+                viewBox="0 0 300 160"
+                className="w-full h-full drop-shadow-md"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  {/* Definição do Formato do Carro (Hatchback Moderno) */}
+                  <path
+                    id="carShape"
+                    d="M25,110 C25,110 20,70 40,55 C50,48 70,35 100,30 C130,25 190,25 220,35 C240,42 260,60 270,80 C275,90 275,110 275,110 L260,110 A18,18 0 0,1 224,110 L96,110 A18,18 0 0,1 60,110 L25,110 Z"
+                  />
+                  {/* Máscara para cortar o líquido dentro do carro */}
+                  <clipPath id="carClip">
+                    <use href="#carShape" />
+                  </clipPath>
+                </defs>
+
+                {/* 1. Fundo do Carro (Cinza Claro) */}
+                <use href="#carShape" fill="#F3F4F6" />
+
+                {/* 2. Líquido de Energia (Verde) - Animado */}
+                <g clipPath="url(#carClip)">
+                  {/* O Retângulo verde sobe conforme a bateria */}
+                  <rect
+                    x="0"
+                    y="0" // Começa do topo
+                    width="300"
+                    height="160"
+                    fill="#D9F804" // primary-400
+                    className="transition-transform duration-1000 ease-linear"
+                    // Usamos translate para empurrar o verde para baixo e revelar conforme carrega
+                    // Se battery é 20%, translateY é 80%. Se 100%, translateY é 0%.
+                    style={{ transform: `translateY(${100 - session.currentBattery}%)` }}
+                  />
+
+                  {/* Opcional: Efeito de brilho no topo do líquido */}
+                  <rect
+                    x="0"
+                    y="-2"
+                    width="300"
+                    height="4"
+                    fill="white"
+                    fillOpacity="0.5"
+                    className="transition-transform duration-1000 ease-linear"
+                    style={{ transform: `translateY(${100 - session.currentBattery}%)` }}
+                  />
+                </g>
+
+                {/* 3. Contorno do Carro (Preto) */}
+                <use
+                  href="#carShape"
+                  fill="none"
+                  stroke="#1A1A1A"
+                  strokeWidth="3"
+                  strokeLinejoin="round"
                 />
-                <span className="text-4xl font-black text-gray-900 z-20 relative mix-blend-multiply">
-                  {Math.round(session.currentBattery)}%
-                </span>
+
+                {/* 4. Rodas */}
+                <g fill="#1A1A1A">
+                  <circle cx="78" cy="110" r="14" />
+                  <circle cx="242" cy="110" r="14" />
+                </g>
+                <g fill="#555">
+                  <circle cx="78" cy="110" r="6" />
+                  <circle cx="242" cy="110" r="6" />
+                </g>
+
+                {/* 5. Janelas (Detalhe visual) */}
+                <path
+                  d="M80,55 L100,38 L160,35 L160,55 L80,55 Z M170,35 L210,40 L230,60 L230,65 L170,65 L170,35 Z"
+                  fill="white"
+                  stroke="#1A1A1A"
+                  strokeWidth="2"
+                  strokeLinejoin="round"
+                  opacity="0.6"
+                />
+
+                {/* 6. Cabo e Conector */}
+                <path
+                  d="M-10,90 C10,90 20,90 35,80"
+                  stroke="#1A1A1A"
+                  strokeWidth="4"
+                  fill="none"
+                  strokeDasharray={session.status === 'charging' ? '10,5' : '0'}
+                  className={session.status === 'charging' ? 'animate-pulse' : ''}
+                />
+                <circle cx="35" cy="80" r="5" fill="#1A1A1A" />
+
+                {/* Raio de Energia (Aparece quando carregando) */}
+                {session.status === 'charging' && (
+                  <path
+                    d="M150,50 L140,70 H155 L145,90"
+                    fill="none"
+                    stroke="#1A1A1A"
+                    strokeWidth="3"
+                    strokeLinejoin="round"
+                    className="animate-bounce"
+                    style={{ transformBox: 'fill-box', transformOrigin: 'center' }}
+                  />
+                )}
+              </svg>
+
+              {/* Porcentagem Centralizada (Fora do SVG para melhor renderização de texto) */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="bg-white/80 backdrop-blur-sm px-4 py-1 rounded-full border border-gray-100 shadow-sm mt-8">
+                  <span className="text-3xl font-black text-gray-900">
+                    {Math.round(session.currentBattery)}%
+                  </span>
+                </div>
               </div>
-              <div className="w-12 h-4 bg-gray-400 mx-auto rounded-b-lg -mt-1 opacity-80"></div>
             </div>
 
             {/* Status Text */}
@@ -109,44 +205,33 @@ export default function ChargingStatus(): JSX.Element {
                 Status
               </span>
               <h2 className="text-2xl font-bold text-gray-900">
-                {session.status === 'starting' && 'Iniciando...'}
+                {session.status === 'starting' && 'Conectando...'}
                 {session.status === 'charging' && 'Carregando...'}
-                {session.status === 'completed' && 'Finalizando...'}
+                {session.status === 'completed' && 'Carga Completa!'}
               </h2>
             </div>
 
             {/* Grid de Informações */}
-            <div className="grid grid-cols-2 gap-8 w-full mb-8 px-2">
-              <div className="flex flex-col items-center">
-                <span className="text-gray-400 text-xs font-medium mb-1">Energia Entregue</span>
-                <span className="text-xl font-black text-gray-900">
-                  {session.energyDelivered.toFixed(1)} kWh
+            <div className="grid grid-cols-2 gap-4 w-full mb-2 px-2">
+              <div className="flex flex-col items-center p-3 bg-gray-50 rounded-2xl">
+                <span className="text-gray-400 text-[10px] font-bold uppercase mb-1">Entregue</span>
+                <span className="text-lg font-black text-gray-900">
+                  {session.energyDelivered.toFixed(1)}{' '}
+                  <span className="text-xs font-medium text-gray-500">kWh</span>
                 </span>
               </div>
-              <div className="flex flex-col items-center border-l border-gray-100">
-                <span className="text-gray-400 text-xs font-medium mb-1">Tempo Restante</span>
-                <span className="text-xl font-black text-gray-900">
-                  {Math.round(session.estimatedTimeRemaining)} min
+              <div className="flex flex-col items-center p-3 bg-gray-50 rounded-2xl">
+                <span className="text-gray-400 text-[10px] font-bold uppercase mb-1">Restante</span>
+                <span className="text-lg font-black text-gray-900">
+                  {Math.round(session.estimatedTimeRemaining)}{' '}
+                  <span className="text-xs font-medium text-gray-500">min</span>
                 </span>
               </div>
-            </div>
-
-            {/* Barra de Progresso Linear */}
-            <div className="w-full space-y-2">
-              <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-primary-400 rounded-full transition-all duration-1000 ease-out"
-                  style={{ width: `${session.currentBattery}%` }}
-                />
-              </div>
-              <p className="text-center text-xs text-gray-400 font-medium">
-                {Math.round(session.currentBattery)}% completo
-              </p>
             </div>
           </div>
         </div>
 
-        {/* FOOTER: Adicionado pb-10 para evitar corte no mobile */}
+        {/* FOOTER */}
         <div className="flex-shrink-0 p-6 pb-10 sm:pb-6 bg-white z-20">
           <button
             onClick={handleCancel}

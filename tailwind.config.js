@@ -8,20 +8,20 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#D9F804', // O Verde Neon principal
-          50: '#FBFEEO',
+          DEFAULT: '#D9F804', // Amarelo Limão Neon (A cor principal do E=FLOW)
+          50: '#FBFEE0',      // Corrigido (era 'O' no final)
           100: '#F7FDC8',
           200: '#EEFB9B',
           300: '#E4F963',
-          400: '#D9F804', // Use este para botões principais
+          400: '#D9F804', 
           500: '#B5CF03',
           600: '#92A702',
           900: '#1A1A1A',
         },
         secondary: {
-          purple: '#5B4EFF', // Roxo (rotas/detalhes)
-          blue: '#89CFF0',   // Azul claro
-          orange: '#FF5F2D', // Laranja
+          purple: '#5B4EFF', // Roxo Vibrante
+          blue: '#89CFF0',   // Azul Céu
+          orange: '#FF4C24', // Laranja Avermelhado (Ajustado para o tom do print)
         },
         gray: {
           50: '#F9F9F9',
@@ -35,7 +35,7 @@ export default {
         sans: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        'float': '0 10px 30px -10px rgba(0, 0, 0, 0.15)', // Sombra mais marcada para elementos flutuantes
+        'float': '0 10px 30px -10px rgba(0, 0, 0, 0.15)',
         'nav': '0 -4px 20px rgba(0,0,0,0.05)',
       },
       borderRadius: {
