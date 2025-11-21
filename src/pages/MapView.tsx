@@ -4,6 +4,8 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { getAllStations } from '../services/stations';
 import type { Station } from '../types';
+// Importar o novo Drawer
+import StationDrawer from '../components/StationDrawer';
 
 // Ícone Preto das Estações
 const BlackPinIcon = L.divIcon({
@@ -17,22 +19,23 @@ const BlackPinIcon = L.divIcon({
   popupAnchor: [0, -48],
 });
 
-// Marcador E= (Localização Atual - Estilo do Design)
+// Marcador E= (Localização Atual)
 const UserLocationIcon = L.divIcon({
   className: 'user-marker',
   html: `<div class="w-16 h-16 bg-primary-400 rounded-full border-4 border-white shadow-xl flex items-center justify-center transform hover:scale-105 transition-transform">
     <span class="font-black text-2xl italic tracking-tighter text-black">E=</span>
   </div>`,
   iconSize: [64, 64],
-  iconAnchor: [32, 32], // Centralizado
+  iconAnchor: [32, 32],
 });
 
 export default function MapView() {
   const navigate = useNavigate();
   const [stations, setStations] = useState<Station[]>([]);
-  // Estado para controlar se está em modo de rota ou não
-  // Inicia como false para bater com o print do design (estado limpo)
-  const [isRouting, setIsRouting] = useState(false); 
+  const [isRouting, setIsRouting] = useState(false);
+  
+  // Estado para controlar qual estação está selecionada
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
   
   const routeCoordinates: [number, number][] = [
     [-23.5925, -46.5333],
@@ -46,18 +49,16 @@ export default function MapView() {
     getAllStations().then(setStations);
   }, []);
 
-  // Função temporária para alternar o estado ao clicar no botão central
   const toggleRouteMode = () => setIsRouting(!isRouting);
 
   return (
     <div className="h-screen w-full relative overflow-hidden bg-gray-100">
       <MapContainer
         center={[-23.5925, -46.5333]}
-        zoom={15} // Zoom um pouco mais próximo para bater com o design
+        zoom={15}
         zoomControl={false}
         style={{ height: '100%', width: '100%' }}
       >
-        {/* Usando um mapa base mais limpo/cinza para bater com o design */}
         <TileLayer
           attribution=''
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
@@ -71,12 +72,11 @@ export default function MapView() {
             position={[station.latitude, station.longitude]}
             icon={BlackPinIcon}
             eventHandlers={{
-              click: () => navigate(`/station/${station.id}`),
+              click: () => setSelectedStation(station),
             }}
           />
         ))}
 
-        {/* Renderização Condicional da Rota */}
         {isRouting && (
           <Polyline 
             positions={routeCoordinates} 
@@ -85,25 +85,32 @@ export default function MapView() {
         )}
       </MapContainer>
 
-      {/* Botões Flutuantes Laterais */}
+      {/* Renderiza o Drawer se houver estação selecionada */}
+      {selectedStation && (
+        <StationDrawer 
+          station={selectedStation} 
+          onClose={() => setSelectedStation(null)} 
+        />
+      )}
+
+      {/* Botões Flutuantes Laterais - CORRIGIDO: Adicionados aria-labels */}
       <div className="absolute right-5 bottom-44 flex flex-col gap-4 z-[1000]">
         <button 
           type="button"
-          aria-label="Filtros"
+          aria-label="Filtrar estações"
           className="w-12 h-12 bg-white rounded-2xl shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-95 transition-transform"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
         </button>
         <button 
           type="button"
-          aria-label="Minha Localização"
+          aria-label="Minha localização"
           className="w-12 h-12 bg-white rounded-2xl shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-95 transition-transform"
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
         </button>
       </div>
 
-      {/* Renderização Condicional do Banner de Rota */}
       {isRouting && (
         <div className="absolute bottom-32 left-6 right-6 z-[1000]">
           <div className="bg-secondary-purple text-white py-4 px-6 rounded-3xl shadow-lg text-center font-bold text-sm flex items-center justify-center gap-3 animate-fade-in-up">
@@ -113,7 +120,7 @@ export default function MapView() {
         </div>
       )}
 
-      {/* Barra de Navegação Inferior - CORRIGIDA */}
+      {/* Barra de Navegação Inferior */}
       <div className="absolute bottom-8 left-6 right-6 h-20 bg-white rounded-[2.5rem] shadow-float z-[1000] grid grid-cols-4 items-center px-4">
         
         {/* 1. Início */}
@@ -134,15 +141,14 @@ export default function MapView() {
           <span className="text-[11px] font-medium">Estações</span>
         </button>
 
-        {/* 3. Botão Central (Quadrado Arredondado DENTRO da barra) */}
+        {/* 3. Botão Central - CORRIGIDO: Adicionado aria-label */}
         <div className="flex justify-center">
           <button 
             type="button"
-            aria-label="Alternar Modo de Rota"
-            onClick={toggleRouteMode} // Alterna o estado ao clicar
+            aria-label={isRouting ? "Sair do modo rota" : "Traçar rota"}
+            onClick={toggleRouteMode} 
             className="w-14 h-14 bg-primary-400 rounded-2xl shadow-sm flex items-center justify-center transition-all active:scale-95 hover:brightness-105"
           >
-            {/* Ícone de Livro/Mapa do Design */}
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M2 6C2 4.34315 3.34315 3 5 3H19C20.6569 3 22 4.34315 22 6V18C22 19.6569 20.6569 21 19 21H5C3.34315 21 2 19.6569 2 18V6Z" stroke="black" strokeWidth="2.5" strokeLinejoin="round"/>
               <path d="M12 21V3" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>

@@ -92,13 +92,13 @@ export default function Payment() {
 
   const estimatedKwh = 30;
   const amount = station.pricePerKwh * estimatedKwh;
-  const selectedMethodData = paymentMethods.find((m) => m.id === selectedMethod);
 
   return (
     <div className="min-h-screen bg-white">
       <header className="bg-white px-4 py-4">
         <button
-          onClick={() => navigate(`/station/${station.id}`)}
+          // CORRIGIDO: Agora volta para o mapa, pois a página de detalhes não existe mais como rota
+          onClick={() => navigate('/map')}
           className="text-[#767676] hover:text-gray-900 font-medium flex items-center gap-2"
         >
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,4 +182,3 @@ export default function Payment() {
     </div>
   );
 }
-
