@@ -1,163 +1,126 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { getAllStations } from '../services/stations';
 import type { Station } from '../types';
-import { getCurrentUser } from '../services/auth';
-import { logout } from '../services/auth';
 
-// Fix for default marker icon in Leaflet with Vite
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-
-const DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
+// Ícone Preto (Gota Invertida)
+const BlackPinIcon = L.divIcon({
+  className: 'custom-marker',
+  html: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.25));">
+    <path d="M12 0C7.58 0 4 3.58 4 8C4 13.5 12 24 12 24C12 24 20 13.5 20 8C20 3.58 16.42 0 12 0ZM12 11C10.34 11 9 9.66 9 8C9 6.34 10.34 5 12 5C13.66 5 15 6.34 15 8C15 9.66 13.66 11 12 11Z" fill="black"/>
+    <circle cx="12" cy="8" r="3.5" fill="white"/>
+  </svg>`,
+  iconSize: [48, 48],
+  iconAnchor: [24, 48],
+  popupAnchor: [0, -48],
 });
 
-L.Marker.prototype.options.icon = DefaultIcon;
+// Marcador E= (Localização Atual)
+const UserLocationIcon = L.divIcon({
+  className: 'user-marker',
+  html: `<div class="w-14 h-14 bg-primary-400 rounded-full border-[3px] border-white shadow-xl flex items-center justify-center transform hover:scale-110 transition-transform">
+    <span class="font-black text-lg italic tracking-tighter">E=</span>
+  </div>`,
+  iconSize: [56, 56],
+  iconAnchor: [28, 56], // Ponta no fundo do pino
+});
 
-/**
- * Map view component
- * Displays charging stations on a map
- */
 export default function MapView() {
   const navigate = useNavigate();
   const [stations, setStations] = useState<Station[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedFilter, setSelectedFilter] = useState<'all' | 'available'>('all');
-  const user = getCurrentUser();
+  
+  // Mock de uma rota para visualização (Roxo)
+  const routeCoordinates: [number, number][] = [
+    [-23.5925, -46.5333], // Início
+    [-23.5900, -46.5300],
+    [-23.5880, -46.5250], // Curva
+    [-23.5850, -46.5250],
+    [-23.5820, -46.5280], // Fim
+  ];
 
   useEffect(() => {
-    loadStations();
+    getAllStations().then(setStations);
   }, []);
 
-  const loadStations = async () => {
-    try {
-      const data = await getAllStations();
-      setStations(data);
-    } catch (error) {
-      console.error('Error loading stations:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleLogout = async () => {
-    await logout();
-    navigate('/login');
-  };
-
-  const filteredStations = selectedFilter === 'available'
-    ? stations.filter(s => s.available)
-    : stations;
-
-  // Default center: São Paulo
-  const center: [number, number] = [-23.5505, -46.6333];
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
   return (
-    <div className="h-screen flex flex-col bg-white overflow-hidden">
-      {/* Header */}
-      <header className="bg-white px-4 py-4 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold text-gray-900">E-Flow</h1>
-            <p className="text-sm text-[#767676]">Olá, {user?.name}</p>
-          </div>
-          <button
-            onClick={handleLogout}
-            className="text-[#767676] hover:text-gray-900 text-sm font-medium"
-          >
-            Sair
-          </button>
-        </div>
-      </header>
+    <div className="h-screen w-full relative overflow-hidden bg-gray-100">
+      
+      <MapContainer
+        center={[-23.5925, -46.5333]}
+        zoom={14}
+        zoomControl={false}
+        style={{ height: '100%', width: '100%' }}
+      >
+        <TileLayer
+          attribution=''
+          url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png" // Mapa estilo clean/claro
+        />
+        
+        <Marker position={[-23.5925, -46.5333]} icon={UserLocationIcon} />
 
-      {/* Filters */}
-      <div className="bg-white px-4 py-3 flex-shrink-0">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setSelectedFilter('all')}
-            className={`px-4 py-2 rounded-[17px] text-sm font-medium transition-colors ${
-              selectedFilter === 'all'
-                ? 'bg-white text-gray-900 shadow-md'
-                : 'bg-transparent text-[#767676] hover:text-gray-900'
-            }`}
-          >
-            Todas
-          </button>
-          <button
-            onClick={() => setSelectedFilter('available')}
-            className={`px-4 py-2 rounded-[17px] text-sm font-medium transition-colors ${
-              selectedFilter === 'available'
-                ? 'bg-white text-gray-900 shadow-md'
-                : 'bg-transparent text-[#767676] hover:text-gray-900'
-            }`}
-          >
-            Disponíveis
-          </button>
+        {stations.map((station) => (
+          <Marker
+            key={station.id}
+            position={[station.latitude, station.longitude]}
+            icon={BlackPinIcon}
+            eventHandlers={{
+              click: () => navigate(`/station/${station.id}`),
+            }}
+          />
+        ))}
+
+        <Polyline 
+          positions={routeCoordinates} 
+          pathOptions={{ color: '#5B4EFF', weight: 6, opacity: 0.8, lineCap: 'round' }} 
+        />
+      </MapContainer>
+
+      {/* Botões Flutuantes Laterais (Direita) */}
+      <div className="absolute right-5 bottom-40 flex flex-col gap-4 z-[1000]">
+        <button className="w-14 h-14 bg-white rounded-full shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        </button>
+        <button className="w-14 h-14 bg-white rounded-full shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+        </button>
+      </div>
+
+      {/* Banner de Rota Ativa (Opcional, baseado no print da rota roxa) */}
+      <div className="absolute bottom-28 left-6 right-6 z-[1000]">
+        <div className="bg-secondary-purple text-white py-3 px-6 rounded-2xl shadow-lg text-center font-semibold text-sm flex items-center justify-center gap-2 animate-fade-in-up">
+          Traçando rota mais eficiente
         </div>
       </div>
 
-      {/* Map */}
-      <div className="flex-1 relative overflow-hidden">
-        <MapContainer
-          center={center}
-          zoom={12}
-          style={{ height: '100%', width: '100%', zIndex: 0 }}
-          scrollWheelZoom={true}
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          {filteredStations.map((station) => (
-            <Marker
-              key={station.id}
-              position={[station.latitude, station.longitude]}
-            >
-              <Popup>
-                <div className="p-2">
-                  <h3 className="font-semibold text-gray-900 mb-1">{station.name}</h3>
-                  <p className="text-sm text-gray-600 mb-2">{station.address}</p>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className={`px-2 py-1 rounded text-xs font-medium ${
-                      station.available
-                        ? 'bg-green-100 text-green-800'
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {station.available ? 'Disponível' : 'Indisponível'}
-                    </span>
-                    <span className="text-xs text-gray-600">
-                      ⭐ {station.rating}
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => navigate(`/station/${station.id}`)}
-                    className="btn-primary text-sm w-full mt-2"
-                  >
-                    Ver Detalhes
-                  </button>
-                </div>
-              </Popup>
-            </Marker>
-          ))}
-        </MapContainer>
+      {/* Barra de Navegação Inferior */}
+      <div className="absolute bottom-8 left-6 right-6 h-20 bg-white rounded-[2rem] shadow-float z-[1000] flex items-center justify-between px-8">
+        {/* Início */}
+        <button className="flex flex-col items-center gap-1 text-gray-400">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M19 10.5V19a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-8.5" /><path d="M22 12L12 2L2 12" /><path d="M12 2v10" /></svg>
+          <span className="text-[10px] font-bold">Início</span>
+        </button>
+
+        {/* Estações */}
+        <button className="flex flex-col items-center gap-1 text-gray-400 mr-6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+          <span className="text-[10px] font-medium">Estações</span>
+        </button>
+
+        {/* Botão Central (Livro/Mapa) */}
+        <div className="absolute left-1/2 -top-5 transform -translate-x-1/2">
+          <button className="w-16 h-16 bg-primary-400 rounded-full shadow-lg border-4 border-white flex items-center justify-center transition-transform active:scale-90">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </button>
+        </div>
+
+        {/* Perfil */}
+        <button className="flex flex-col items-center gap-1 text-gray-400 ml-6" onClick={() => navigate('/login')}>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+          <span className="text-[10px] font-medium">Perfil</span>
+        </button>
       </div>
     </div>
   );
 }
-

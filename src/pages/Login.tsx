@@ -2,95 +2,106 @@ import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/auth';
 
-/**
- * Login page component
- * Mock login form matching the design
- */
 export default function Login() {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
-
     try {
       await login(email, password);
       navigate('/map');
     } catch (err) {
-      setError('Erro ao fazer login. Tente novamente.');
+      console.error(err);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary-600 px-4 py-8">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
-          <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">E-Flow</h1>
-            <p className="text-gray-600 text-base">Faça login para continuar</p>
+    <div className="min-h-screen bg-white flex flex-col px-8 pt-16 pb-8">
+      
+      {/* Dots de Progresso */}
+      <div className="flex justify-center gap-3 mb-12">
+        <div className="w-3 h-3 rounded-full bg-primary-400"></div>
+        <div className="w-3 h-3 rounded-full bg-secondary-purple"></div>
+        <div className="w-3 h-3 rounded-full bg-secondary-orange"></div>
+        <div className="w-3 h-3 rounded-full bg-secondary-blue opacity-50"></div>
+      </div>
+
+      <div className="text-center mb-10">
+        <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">
+          Crie uma conta
+        </h1>
+        <p className="text-gray-500 font-medium">
+          Isso leva menos de um minuto.<br />
+          Entre com seu e-mail e senha.
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-4 flex-1">
+        <input
+          type="text"
+          placeholder="Nome"
+          className="input-field"
+        />
+        
+        <input
+          type="email"
+          placeholder="E-mail"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          className="input-field"
+        />
+
+        <input
+          type="password"
+          placeholder="Senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          className="input-field"
+        />
+
+        <button
+          type="submit"
+          disabled={loading}
+          className="btn-primary mt-6"
+        >
+          {loading ? 'Entrando...' : 'Registre-se'}
+        </button>
+
+        <div className="relative py-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300"></div>
           </div>
-
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-[14.5px] border border-[#767676] focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
-                placeholder="seu@email.com"
-                required
-                disabled={loading}
-              />
-            </div>
-
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Senha
-              </label>
-              <input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-[14.5px] border border-[#767676] focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
-                placeholder="••••••••"
-                required
-                disabled={loading}
-              />
-            </div>
-
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-                {error}
-              </div>
-            )}
-
-            <button
-              type="submit"
-              className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={loading}
-            >
-              {loading ? 'Entrando...' : 'Entrar'}
-            </button>
-          </form>
-
-          <div className="mt-6 text-center text-xs text-[#767676]">
-            <p>Use qualquer email e senha para fazer login (mockado)</p>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-4 bg-white text-gray-500">Ou</span>
           </div>
         </div>
-      </div>
+
+        {/* Social Login Mock */}
+        <div className="space-y-3">
+          <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-gray-300 rounded-2xl hover:bg-gray-50 transition-colors">
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
+            <span className="text-gray-600 font-medium text-sm">Continue com sua conta Google</span>
+          </button>
+          <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-gray-300 rounded-2xl hover:bg-gray-50 transition-colors">
+            <img src="https://www.svgrepo.com/show/355117/microsoft.svg" className="w-5 h-5" alt="Microsoft" />
+            <span className="text-gray-600 font-medium text-sm">Continue com sua conta Microsoft</span>
+          </button>
+          <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-black text-white rounded-2xl hover:bg-gray-800 transition-colors">
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.74.62 3.48 1.56-3.17 1.63-2.66 5.76.36 7.1-.71 1.73-1.69 3.41-2.43 4.37zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <span className="text-white font-medium text-sm">Continue com sua conta Apple</span>
+          </button>
+        </div>
+      </form>
+
+      <p className="text-center mt-8 text-gray-500 text-sm">
+        Já possui uma conta? <button onClick={() => navigate('/login')} className="text-secondary-purple font-bold underline">Entrar</button>
+      </p>
     </div>
   );
 }
-

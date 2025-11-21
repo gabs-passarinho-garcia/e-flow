@@ -2,10 +2,6 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../services/auth';
 
-/**
- * Splash screen component
- * Shows logo and transitions to login or map
- */
 export default function Splash() {
   const navigate = useNavigate();
 
@@ -16,23 +12,45 @@ export default function Splash() {
       } else {
         navigate('/login');
       }
-    }, 2000); // 2 seconds delay
+    }, 2500);
 
     return () => clearTimeout(timer);
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-primary-600">
-      <div className="text-center animate-fade-in">
-        <div className="mb-8">
-          <h1 className="text-6xl font-bold text-gray-900 mb-4">E-Flow</h1>
-          <p className="text-xl text-gray-800">Carregamento de Carros Elétricos</p>
+    <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center">
+      {/* Formas Geométricas Superiores (Canto Direito) */}
+      <div className="absolute -top-10 -right-10 flex flex-col gap-4 rotate-45 opacity-90">
+        <div className="flex gap-4">
+          <div className="w-24 h-8 bg-secondary-purple rounded-full"></div>
+          <div className="w-12 h-8 bg-secondary-blue rounded-full"></div>
         </div>
-        <div className="flex justify-center">
-          <div className="w-16 h-16 border-4 border-gray-900 border-t-transparent rounded-full animate-spin"></div>
+        <div className="flex gap-4 ml-8">
+          <div className="w-32 h-8 bg-primary-400 rounded-full"></div>
+        </div>
+        <div className="flex gap-4 ml-4">
+          <div className="w-24 h-8 bg-secondary-orange rounded-full"></div>
+        </div>
+      </div>
+
+      {/* Logo Central */}
+      <div className="z-10 text-center animate-pulse">
+        <h1 className="text-5xl font-black italic tracking-tighter">
+          E<span className="text-primary-400">=</span>FLOW
+        </h1>
+      </div>
+
+      {/* Formas Geométricas Inferiores (Canto Esquerdo) */}
+      <div className="absolute -bottom-10 -left-10 flex flex-col gap-4 rotate-45 opacity-90">
+        <div className="flex gap-4 mr-8">
+          <div className="w-16 h-8 bg-secondary-blue rounded-full"></div>
+          <div className="w-24 h-8 bg-secondary-purple rounded-full"></div>
+        </div>
+        <div className="flex gap-4">
+          <div className="w-12 h-8 bg-secondary-orange rounded-full"></div>
+          <div className="w-32 h-8 bg-primary-400 rounded-full"></div>
         </div>
       </div>
     </div>
   );
 }
-

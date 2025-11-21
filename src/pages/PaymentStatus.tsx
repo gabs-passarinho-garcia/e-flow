@@ -1,141 +1,61 @@
-import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getPaymentById } from '../services/payment';
-import { startCharging } from '../services/charging';
-import { getCurrentUser } from '../services/auth';
-import { storage } from '../utils/storage';
-import type { Payment } from '../types';
 
-/**
- * Payment status page component
- * Shows payment confirmation and starts charging
- */
 export default function PaymentStatus() {
   const navigate = useNavigate();
-  const [payment, setPayment] = useState<Payment | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [starting, setStarting] = useState(false);
-  const user = getCurrentUser();
-
-  useEffect(() => {
-    loadPayment();
-  }, []);
-
-  const loadPayment = async () => {
-    try {
-      const paymentData = storage.getPayment<Payment>();
-      if (paymentData) {
-        setPayment(paymentData);
-        
-        // Auto-start charging after 2 seconds
-        setTimeout(() => {
-          handleStartCharging();
-        }, 2000);
-      }
-    } catch (error) {
-      console.error('Error loading payment:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleStartCharging = async () => {
-    if (!payment || !user || starting) return;
-
-    setStarting(true);
-
-    try {
-      await startCharging(payment.stationId, user.id, payment.id);
-      navigate('/charging');
-    } catch (error) {
-      console.error('Error starting charging:', error);
-    } finally {
-      setStarting(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white px-4">
-      <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
-          {payment?.status === 'completed' ? (
-            <>
-              <div className="mb-6">
-                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-16 h-16 text-green-600"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={3}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Pagamento Aprovado!
-                </h2>
-                <p className="text-[#767676] mb-4">
-                  R$ {payment.amount.toFixed(2)} processado com sucesso
-                </p>
-              </div>
+    <div className="min-h-screen bg-white flex flex-col px-6 py-8 relative overflow-hidden">
+      
+      {/* Botão Voltar */}
+      <div className="w-full flex justify-start mb-4 z-10">
+        <button onClick={() => navigate('/map')} className="p-2 -ml-2">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+        </button>
+      </div>
 
-              {starting ? (
-                <div className="space-y-4">
-                  <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="text-[#767676]">Iniciando carregamento...</p>
-                </div>
-              ) : (
-                <button
-                  onClick={handleStartCharging}
-                  className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all"
-                >
-                  Iniciar Carregamento
-                </button>
-              )}
-            </>
-          ) : (
-            <>
-              <div className="mb-6">
-                <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg
-                    className="w-16 h-16 text-yellow-600 animate-spin"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M4 4v5h.582m15.356 2A9.001 9.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a9.003 9.003 0 01-15.357-2m15.357 2H15"
-                    />
-                  </svg>
-                </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Processando Pagamento...
-                </h2>
-                <p className="text-[#767676]">
-                  Aguarde enquanto processamos seu pagamento
-                </p>
-              </div>
-            </>
-          )}
+      <div className="flex flex-col items-center text-center z-10 mt-4">
+        <h1 className="text-4xl font-bold text-gray-900 leading-tight mb-2">
+          Pagamento<br />Aprovado!
+        </h1>
+        
+        {/* Ilustração Mockada (Carro e Fundo) */}
+        <div className="relative w-full h-80 my-6 flex items-center justify-center">
+          {/* Elementos de Fundo (Abstrato simulando a arte) */}
+          <div className="absolute w-64 h-64 bg-primary-100 rounded-full -z-10 top-0 blur-2xl opacity-70"></div>
+          <div className="absolute w-48 h-48 bg-blue-100 rounded-full -z-10 bottom-0 right-10 blur-xl opacity-60"></div>
+          
+          {/* Imagem do Carro (Usando o print recortado via CSS como placeholder ou um SVG se tiver) */}
+          {/* Dica: Substitua src pelo caminho real da imagem recortada do carro se tiver */}
+          <img 
+            src="/assets/jpg/WhatsApp Image 2025-11-20 at 10.54.50 (4).jpeg" 
+            alt="Carro Carregando" 
+            className="object-contain h-full rounded-2xl shadow-sm" 
+            style={{ clipPath: 'inset(20% 0 35% 0)' }} // Gambiarra visual para focar no carro do print
+          />
+        </div>
+
+        {/* Mensagem Card */}
+        <div className="w-full border border-gray-200 rounded-3xl p-5 mb-8 bg-white shadow-sm">
+          <p className="text-gray-700 font-medium text-sm leading-relaxed">
+            Da próxima vez que fizer uma recarga,<br />
+            <span className="font-bold text-black">lembraremos do seu carro automaticamente.</span>
+          </p>
+        </div>
+
+        <div className="w-full space-y-4">
+          <p className="text-gray-500 text-sm">
+            Conte para nós sobre sua experiência<br />
+            e ajude a melhorar a <span className="font-bold text-black">E-FLOW!</span>
+          </p>
+          
+          <button
+            onClick={() => navigate('/charging')}
+            className="w-48 bg-primary-400 text-black font-bold text-xl py-3 rounded-full shadow-lg hover:bg-primary-500 transition-colors mx-auto block"
+          >
+            Avaliar
+          </button>
         </div>
       </div>
     </div>
   );
 }
-
