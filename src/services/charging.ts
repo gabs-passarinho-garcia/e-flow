@@ -115,3 +115,15 @@ export const onChargingProgress = (callback: (session: ChargingSession) => void)
     progressCallback = null;
   };
 };
+
+/**
+ * Reset charging service state (for testing)
+ */
+export const resetChargingState = (): void => {
+  if (chargingInterval) {
+    clearInterval(chargingInterval);
+    chargingInterval = null;
+  }
+  currentSession = null;
+  progressCallback = null;
+};

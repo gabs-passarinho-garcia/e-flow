@@ -1,7 +1,7 @@
 /**
  * Unit tests for authentication service
  */
-import { describe, it, expect, beforeEach, afterEach } from 'bun:test';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'bun:test';
 import { login, logout, getCurrentUser, isAuthenticated } from '../auth';
 import { storage } from '../../utils/storage';
 import type { User } from '../../types';
@@ -11,6 +11,8 @@ describe('Auth Service', () => {
     storage.removeUser();
     storage.removeSession();
     storage.removePayment();
+    // Clear any mocks that might interfere
+    vi.clearAllMocks();
   });
 
   afterEach(() => {
