@@ -47,7 +47,7 @@ export default function Login() {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-[14.5px] border border-[#767676] focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
                 placeholder="seu@email.com"
                 required
                 disabled={loading}
@@ -63,7 +63,7 @@ export default function Login() {
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-all"
+                className="w-full px-4 py-3 rounded-[14.5px] border border-[#767676] focus:outline-none focus:ring-2 focus:ring-primary-600 focus:border-transparent transition-all"
                 placeholder="••••••••"
                 required
                 disabled={loading}
@@ -78,14 +78,14 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full bg-primary-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={loading}
             >
               {loading ? 'Entrando...' : 'Entrar'}
             </button>
           </form>
 
-          <div className="mt-6 text-center text-xs text-gray-500">
+          <div className="mt-6 text-center text-xs text-[#767676]">
             <p>Use qualquer email e senha para fazer login (mockado)</p>
           </div>
         </div>

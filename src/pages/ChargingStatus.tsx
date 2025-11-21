@@ -75,17 +75,17 @@ export default function ChargingStatus() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
-      <header className="bg-white shadow-sm px-4 py-4">
+    <div className="min-h-screen bg-white flex flex-col">
+      <header className="bg-white px-4 py-4">
         <h1 className="text-xl font-bold text-gray-900">Carregamento em Andamento</h1>
       </header>
 
       <div className="flex-1 flex items-center justify-center px-4 py-8">
         <div className="w-full max-w-md">
-          <div className="card text-center space-y-8">
+          <div className="bg-white rounded-2xl shadow-lg p-8 text-center space-y-8">
             {/* Battery Icon */}
             <div className="relative">
-              <div className="w-48 h-32 mx-auto border-4 border-gray-300 rounded-lg relative overflow-hidden">
+              <div className="w-48 h-32 mx-auto border-4 border-[#767676] rounded-lg relative overflow-hidden">
                 <div
                   className="absolute bottom-0 left-0 right-0 bg-primary-600 transition-all duration-500"
                   style={{ height: `${session.currentBattery}%` }}
@@ -97,13 +97,13 @@ export default function ChargingStatus() {
                 </div>
               </div>
               {/* Battery terminal */}
-              <div className="w-8 h-4 bg-gray-300 mx-auto -mt-1 rounded-t"></div>
+              <div className="w-8 h-4 bg-[#767676] mx-auto -mt-1 rounded-t"></div>
             </div>
 
             {/* Status Info */}
             <div className="space-y-4">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Status</p>
+                <p className="text-sm text-[#767676] mb-1">Status</p>
                 <p className="text-lg font-semibold text-gray-900">
                   {session.status === 'starting' && 'Iniciando...'}
                   {session.status === 'charging' && 'Carregando...'}
@@ -113,13 +113,13 @@ export default function ChargingStatus() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Energia Entregue</p>
+                  <p className="text-sm text-[#767676] mb-1">Energia Entregue</p>
                   <p className="text-xl font-bold text-gray-900">
                     {session.energyDelivered.toFixed(1)} kWh
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-600 mb-1">Tempo Restante</p>
+                  <p className="text-sm text-[#767676] mb-1">Tempo Restante</p>
                   <p className="text-xl font-bold text-gray-900">
                     {session.estimatedTimeRemaining} min
                   </p>
@@ -129,13 +129,13 @@ export default function ChargingStatus() {
 
             {/* Progress Bar */}
             <div>
-              <div className="w-full bg-gray-200 rounded-full h-4 mb-2">
+              <div className="w-full bg-gray-200 rounded-full h-2 mb-2">
                 <div
-                  className="bg-primary-600 h-4 rounded-full transition-all duration-500"
+                  className="bg-primary-600 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${session.currentBattery}%` }}
                 />
               </div>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[#767676]">
                 {session.currentBattery}% completo
               </p>
             </div>
@@ -145,7 +145,7 @@ export default function ChargingStatus() {
               <button
                 onClick={handleCancel}
                 disabled={cancelling}
-                className="btn-danger w-full"
+                className="w-full bg-red-50 text-red-600 font-semibold py-3 px-6 rounded-[15px] hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {cancelling ? 'Cancelando...' : 'Cancelar Carregamento'}
               </button>

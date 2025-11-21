@@ -95,34 +95,37 @@ export default function Payment() {
   const selectedMethodData = paymentMethods.find((m) => m.id === selectedMethod);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm px-4 py-4">
+    <div className="min-h-screen bg-white">
+      <header className="bg-white px-4 py-4">
         <button
           onClick={() => navigate(`/station/${station.id}`)}
-          className="text-primary-600 hover:text-primary-700 font-medium"
+          className="text-[#767676] hover:text-gray-900 font-medium flex items-center gap-2"
         >
-          ← Voltar
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Voltar
         </button>
       </header>
 
       <div className="px-4 py-6 space-y-6">
         {/* Station Summary */}
-        <div className="card">
+        <div className="bg-white rounded-2xl shadow-lg p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Resumo do Carregamento</h2>
           <div className="space-y-3">
             <div className="flex justify-between">
-              <span className="text-gray-600">Estação:</span>
+              <span className="text-[#767676]">Estação:</span>
               <span className="font-semibold text-gray-900">{station.name}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Energia Estimada:</span>
+              <span className="text-[#767676]">Energia Estimada:</span>
               <span className="font-semibold text-gray-900">{estimatedKwh} kWh</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-gray-600">Preço por kWh:</span>
+              <span className="text-[#767676]">Preço por kWh:</span>
               <span className="font-semibold text-gray-900">R$ {station.pricePerKwh.toFixed(2)}</span>
             </div>
-            <div className="border-t pt-3 flex justify-between">
+            <div className="border-t border-gray-200 pt-3 flex justify-between">
               <span className="text-lg font-bold text-gray-900">Total:</span>
               <span className="text-lg font-bold text-primary-600">R$ {amount.toFixed(2)}</span>
             </div>
@@ -130,7 +133,7 @@ export default function Payment() {
         </div>
 
         {/* Payment Form */}
-        <form onSubmit={handleSubmit} className="card space-y-6">
+        <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
           <h2 className="text-xl font-bold text-gray-900">Método de Pagamento</h2>
 
           <div className="space-y-3">
@@ -158,7 +161,7 @@ export default function Payment() {
                     {method.type === 'pix' && '⚡ PIX'}
                   </div>
                   {method.last4 && (
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-[#767676]">
                       {method.brand} •••• {method.last4}
                     </div>
                   )}
@@ -170,7 +173,7 @@ export default function Payment() {
           <button
             type="submit"
             disabled={!selectedMethod || processing}
-            className="btn-primary w-full"
+            className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {processing ? 'Processando...' : `Pagar R$ ${amount.toFixed(2)}`}
           </button>
