@@ -21,21 +21,48 @@ export default function Success() {
     loadData();
   }, []);
 
+  /**
+   * Convert string date to Date object
+   */
+  const parseDate = (date: Date | string | undefined): Date | null => {
+    if (!date) return null;
+    if (date instanceof Date) return date;
+    if (typeof date === 'string') {
+      const parsed = new Date(date);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+    return null;
+  };
+
   const loadData = async () => {
     try {
       const sessionData = await getCurrentSession();
-      setSession(sessionData);
-
+      
       if (sessionData) {
+        // Convert date strings to Date objects
+        const parsedStartTime = parseDate(sessionData.startTime);
+        const parsedEndTime = sessionData.endTime ? parseDate(sessionData.endTime) : null;
+        
+        const processedSession: ChargingSession = {
+          ...sessionData,
+          startTime: parsedStartTime || new Date(),
+          endTime: parsedEndTime || undefined,
+        };
+        
+        setSession(processedSession);
+
         const [paymentData, stationData] = await Promise.all([
-          getPaymentById(sessionData.paymentId),
-          getStationById(sessionData.stationId),
+          getPaymentById(sessionData.paymentId).catch(() => null),
+          getStationById(sessionData.stationId).catch(() => null),
         ]);
         setPayment(paymentData);
         setStation(stationData);
+      } else {
+        setSession(null);
       }
     } catch (error) {
       console.error('Error loading data:', error);
+      setSession(null);
     } finally {
       setLoading(false);
     }
@@ -61,7 +88,10 @@ export default function Success() {
       <div className="min-h-screen flex items-center justify-center px-4">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Sessão não encontrada</h2>
-          <button onClick={handleBackToMap} className="btn-primary">
+          <button 
+            onClick={handleBackToMap} 
+            className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all"
+          >
             Voltar ao Mapa
           </button>
         </div>
@@ -69,9 +99,29 @@ export default function Success() {
     );
   }
 
-  const duration = session.endTime && session.startTime
-    ? Math.round((session.endTime.getTime() - session.startTime.getTime()) / 60000)
-    : 0;
+  // Calculate duration safely
+  const calculateDuration = (): number => {
+    if (!session) return 0;
+    
+    const startTime = session.startTime instanceof Date 
+      ? session.startTime 
+      : parseDate(session.startTime);
+    const endTime = session.endTime instanceof Date 
+      ? session.endTime 
+      : (session.endTime ? parseDate(session.endTime) : null);
+    
+    if (!startTime || !endTime) return 0;
+    
+    try {
+      const diff = endTime.getTime() - startTime.getTime();
+      return Math.max(0, Math.round(diff / 60000));
+    } catch (error) {
+      console.error('Error calculating duration:', error);
+      return 0;
+    }
+  };
+
+  const duration = calculateDuration();
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center px-4">
