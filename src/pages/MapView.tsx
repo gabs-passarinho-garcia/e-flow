@@ -4,10 +4,8 @@ import { MapContainer, TileLayer, Marker, Polyline } from 'react-leaflet';
 import L from 'leaflet';
 import { getAllStations } from '../services/stations';
 import type { Station } from '../types';
-// Importar o novo Drawer
 import StationDrawer from '../components/StationDrawer';
 
-// Ícone Preto das Estações
 const BlackPinIcon = L.divIcon({
   className: 'custom-marker',
   html: `<svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0px 4px 8px rgba(0,0,0,0.3));">
@@ -19,7 +17,6 @@ const BlackPinIcon = L.divIcon({
   popupAnchor: [0, -48],
 });
 
-// Marcador E= (Localização Atual)
 const UserLocationIcon = L.divIcon({
   className: 'user-marker',
   html: `<div class="relative w-16 h-16 flex items-center justify-center">
@@ -53,8 +50,7 @@ export default function MapView(): JSX.Element {
   const toggleRouteMode = (): void => setIsRouting(!isRouting);
 
   return (
-    // CORREÇÃO: h-[100dvh] para garantir que o mapa ocupe exatamente a área visível
-    <div className="h-[100dvh] w-full relative overflow-hidden bg-gray-100">
+    <div className="h-full w-full relative overflow-hidden bg-gray-100">
       <MapContainer
         center={[-23.5925, -46.5333]}
         zoom={15}
@@ -99,7 +95,6 @@ export default function MapView(): JSX.Element {
         <StationDrawer station={selectedStation} onClose={() => setSelectedStation(null)} />
       )}
 
-      {/* === UI FLUTUANTE === */}
       <div className="absolute right-5 bottom-48 flex flex-col gap-3 z-[900]">
         <button
           type="button"
@@ -148,7 +143,6 @@ export default function MapView(): JSX.Element {
         </button>
       </div>
 
-      {/* Chips de Filtro */}
       <div className="absolute bottom-32 left-0 right-0 z-[900] flex gap-3 overflow-x-auto px-6 pb-2 no-scrollbar snap-x">
         <button className="snap-start flex-shrink-0 bg-white border-2 border-[#2E9AFF] text-[#2E9AFF] font-bold px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform">
           Traçar rota
@@ -161,7 +155,6 @@ export default function MapView(): JSX.Element {
         </button>
       </div>
 
-      {/* Barra de Navegação Inferior */}
       <div className="absolute bottom-8 left-6 right-6 h-20 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.12)] z-[1000] grid grid-cols-4 items-center px-2">
         <button
           type="button"

@@ -1,136 +1,210 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { startCharging } from '../services/charging';
+import { getCurrentSession } from '../services/charging';
+import { getPaymentById } from '../services/payment';
+import { getStationById } from '../services/stations';
+import type { ChargingSession, Payment, Station } from '../types';
 import { storage } from '../utils/storage';
-import type { Payment } from '../types';
 
-export default function PaymentStatus(): JSX.Element {
+export default function Success(): JSX.Element {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [session, setSession] = useState<ChargingSession | null>(null);
+  const [payment, setPayment] = useState<Payment | null>(null);
+  const [station, setStation] = useState<Station | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const handleStartSession = async (): Promise<void> => {
-    setIsLoading(true);
+  const parseDate = (date: Date | string | undefined): Date | null => {
+    if (!date) return null;
+    if (date instanceof Date) return date;
+    if (typeof date === 'string') {
+      const parsed = new Date(date);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+    return null;
+  };
+
+  const loadData = async (): Promise<void> => {
     try {
-      // Recupera o último pagamento para pegar os IDs necessários
-      const lastPayment = storage.getPayment<Payment>();
+      const sessionData = await getCurrentSession();
 
-      if (!lastPayment) {
-        console.error('Pagamento não encontrado');
-        navigate('/map'); // Fallback de segurança
-        return;
+      if (sessionData) {
+        const parsedStartTime = parseDate(sessionData.startTime);
+        const parsedEndTime = sessionData.endTime ? parseDate(sessionData.endTime) : null;
+
+        const processedSession: ChargingSession = {
+          ...sessionData,
+          startTime: parsedStartTime || new Date(),
+          endTime: parsedEndTime || undefined,
+        };
+
+        setSession(processedSession);
+
+        const [paymentData, stationData] = await Promise.all([
+          getPaymentById(sessionData.paymentId).catch(() => null),
+          getStationById(sessionData.stationId).catch(() => null),
+        ]);
+        setPayment(paymentData);
+        setStation(stationData);
+      } else {
+        setSession(null);
       }
-
-      // O Pulo do Gato: Inicia a sessão efetivamente antes de navegar
-      await startCharging(lastPayment.stationId, lastPayment.userId, lastPayment.id);
-
-      navigate('/charging');
     } catch (error) {
-      console.error('Erro ao iniciar sessão:', error);
+      console.error('Error loading data:', error);
+      setSession(null);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  return (
-    // Outer Wrapper
-    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
-      {/* Container Principal */}
-      <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
-        {/* HEADER */}
-        <header className="px-6 pt-6 flex justify-start flex-shrink-0">
+  useEffect(() => {
+    void loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleBackToMap = (): void => {
+    storage.removeSession();
+    storage.removePayment();
+    navigate('/map');
+  };
+
+  if (loading) {
+    return (
+      <div className="h-full flex items-center justify-center bg-gray-100">
+        <div className="w-16 h-16 border-4 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4">
+        <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col items-center justify-center p-8 shadow-2xl overflow-hidden">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Sessão não encontrada</h2>
           <button
-            type="button"
-            aria-label="Voltar para o mapa"
-            onClick={() => navigate('/map')}
-            className="p-2 -ml-2 hover:bg-gray-100 rounded-full transition-colors"
+            onClick={handleBackToMap}
+            className="bg-primary-400 text-black font-bold py-3 px-8 rounded-full hover:brightness-95 transition-all"
           >
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="black"
-              strokeWidth="3"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
+            Voltar ao Mapa
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  const calculateDuration = (): number => {
+    if (!session) return 0;
+
+    const startTime =
+      session.startTime instanceof Date ? session.startTime : parseDate(session.startTime);
+    const endTime =
+      session.endTime instanceof Date
+        ? session.endTime
+        : session.endTime
+          ? parseDate(session.endTime)
+          : null;
+
+    if (!startTime || !endTime) return 0;
+
+    try {
+      const diff = endTime.getTime() - startTime.getTime();
+      return Math.max(0, Math.round(diff / 60000));
+    } catch (error) {
+      console.error('Error calculating duration:', error);
+      return 0;
+    }
+  };
+
+  const duration = calculateDuration();
+
+  return (
+    <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
+      <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
+        <header className="px-6 pt-8 flex justify-center flex-shrink-0">
+          <span className="text-xs font-bold tracking-widest text-gray-400 uppercase">
+            Resumo da Recarga
+          </span>
         </header>
 
-        {/* CONTEÚDO PRINCIPAL: Adicionado pb-10 no mobile */}
-        <div className="flex-1 flex flex-col justify-evenly items-center px-6 w-full h-full pb-10 sm:pb-6">
-          {/* Título */}
-          <div className="text-center flex-shrink-0">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 leading-tight">
-              Pagamento
-              <br />
-              Aprovado!
-            </h1>
+        <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth min-h-0 flex flex-col items-center">
+          <div className="my-6 relative">
+            <div className="w-24 h-24 bg-primary-400 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(217,248,4,0.4)] animate-bounce-slow">
+              <svg
+                className="w-12 h-12 text-black"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                strokeWidth="3"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
           </div>
 
-          {/* Área da Imagem */}
-          <div className="flex-shrink-1 flex items-center justify-center w-full min-h-0">
-            <img
-              src="/assets/svg/approved-payment-icon.svg"
-              alt="Ilustração de Carregamento Aprovado"
-              className="w-auto h-auto max-h-[35vh] sm:max-h-[40vh] object-contain drop-shadow-sm"
-            />
-          </div>
+          <h1 className="text-3xl font-black text-gray-900 text-center leading-tight mb-2">
+            Recarga
+            <br />
+            Concluída!
+          </h1>
+          <p className="text-gray-500 text-sm text-center mb-8 max-w-[200px]">
+            Seu veículo está carregado e pronto para rodar.
+          </p>
 
-          {/* Mensagem Card */}
-          <div className="w-full border border-gray-200 rounded-3xl p-4 sm:p-5 bg-white shadow-sm flex-shrink-0">
-            <p className="text-gray-700 font-medium text-sm sm:text-base leading-relaxed text-center">
-              Tudo pronto!
-              <br />
-              <span className="font-bold text-black">Seu carregador foi liberado.</span>
-            </p>
-          </div>
+          <div className="w-full bg-gray-50 rounded-3xl p-6 border border-gray-100 relative">
+            <div className="absolute -left-3 top-1/2 w-6 h-6 bg-white rounded-full border-r border-gray-100 transform -translate-y-1/2"></div>
+            <div className="absolute -right-3 top-1/2 w-6 h-6 bg-white rounded-full border-l border-gray-100 transform -translate-y-1/2"></div>
 
-          {/* Footer / Botão */}
-          <div className="w-full flex-shrink-0 text-center space-y-3 sm:space-y-4">
-            <p className="text-gray-500 text-xs sm:text-sm">
-              Conecte o cabo ao seu veículo
-              <br />
-              para iniciar a recarga na <span className="font-bold text-black">E-FLOW!</span>
-            </p>
+            {station && (
+              <div className="text-center mb-6 pb-6 border-b border-dashed border-gray-300">
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-1">
+                  Estação
+                </p>
+                <h3 className="text-lg font-bold text-gray-900">{station.name}</h3>
+                <p className="text-xs text-gray-500 mt-1 truncate">{station.address}</p>
+              </div>
+            )}
 
-            <button
-              type="button"
-              onClick={handleStartSession}
-              disabled={isLoading}
-              className="w-full max-w-[280px] bg-primary-400 text-black font-bold text-lg sm:text-xl py-3 sm:py-4 rounded-full shadow-lg hover:brightness-95 transition-all mx-auto active:scale-95 disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            >
-              {isLoading ? (
-                <>
-                  <svg
-                    className="animate-spin h-5 w-5 text-black"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Iniciando...
-                </>
-              ) : (
-                'Acompanhar Carregamento'
-              )}
-            </button>
+            <div className="grid grid-cols-2 gap-y-6 gap-x-4 mb-6">
+              <div>
+                <p className="text-xs text-gray-400 mb-1">Energia</p>
+                <p className="text-xl font-black text-gray-900">
+                  {session.energyDelivered.toFixed(1)}{' '}
+                  <span className="text-sm font-medium text-gray-500">kWh</span>
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-gray-400 mb-1">Tempo</p>
+                <p className="text-xl font-black text-gray-900">
+                  {duration} <span className="text-sm font-medium text-gray-500">min</span>
+                </p>
+              </div>
+            </div>
+
+            {payment && (
+              <div className="bg-white rounded-2xl p-4 border border-gray-200 flex justify-between items-center">
+                <span className="font-medium text-gray-600">Total Pago</span>
+                <span className="text-2xl font-black text-gray-900">
+                  R$ {payment.amount.toFixed(2)}
+                </span>
+              </div>
+            )}
           </div>
+        </div>
+
+        <div className="flex-shrink-0 p-6 pb-10 sm:pb-6 bg-white border-t border-gray-50 z-20">
+          <button
+            onClick={handleBackToMap}
+            className="w-full bg-black text-white font-bold text-lg py-4 rounded-2xl shadow-lg hover:bg-gray-800 transition-all active:scale-95 flex items-center justify-center gap-2"
+          >
+            <span>Voltar ao Mapa</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
+            </svg>
+          </button>
         </div>
       </div>
     </div>

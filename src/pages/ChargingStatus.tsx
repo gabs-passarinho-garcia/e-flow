@@ -69,15 +69,15 @@ export default function ChargingStatus(): JSX.Element {
 
   if (loading || !session) {
     return (
-      <div className="h-[100dvh] flex items-center justify-center bg-gray-100">
+      <div className="h-full flex items-center justify-center bg-gray-100">
         <div className="w-16 h-16 border-4 border-primary-400 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   return (
-    // Outer Wrapper
-    <div className="h-[100dvh] bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
+    // CORREÇÃO: h-full para se ajustar ao container pai
+    <div className="h-full bg-gray-100 flex justify-center items-center sm:p-4 overflow-hidden">
       {/* Container Principal */}
       <div className="w-full max-w-md bg-white h-full sm:h-[90vh] sm:max-h-[850px] sm:rounded-[2.5rem] flex flex-col shadow-2xl overflow-hidden relative">
         {/* HEADER (Fixo) */}
@@ -85,11 +85,11 @@ export default function ChargingStatus(): JSX.Element {
           <h1 className="text-lg font-bold text-gray-900">Carregamento em Andamento</h1>
         </header>
 
-        {/* CONTEÚDO */}
+        {/* CONTEÚDO (Scrollável) */}
         <div className="flex-1 overflow-y-auto px-6 py-4 scroll-smooth min-h-0 flex flex-col items-center justify-center">
           {/* Card Principal */}
           <div className="w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 p-8 flex flex-col items-center">
-            {/* Bateria */}
+            {/* Bateria / Monitor Visual */}
             <div className="mb-8 relative">
               <div className="w-48 h-32 border-[6px] border-gray-500 rounded-xl relative overflow-hidden bg-white flex items-center justify-center z-10">
                 <div
@@ -103,7 +103,7 @@ export default function ChargingStatus(): JSX.Element {
               <div className="w-12 h-4 bg-gray-400 mx-auto rounded-b-lg -mt-1 opacity-80"></div>
             </div>
 
-            {/* Status */}
+            {/* Status Text */}
             <div className="text-center mb-8 space-y-1">
               <span className="text-gray-400 text-xs font-bold uppercase tracking-wider">
                 Status
@@ -115,7 +115,7 @@ export default function ChargingStatus(): JSX.Element {
               </h2>
             </div>
 
-            {/* Info */}
+            {/* Grid de Informações */}
             <div className="grid grid-cols-2 gap-8 w-full mb-8 px-2">
               <div className="flex flex-col items-center">
                 <span className="text-gray-400 text-xs font-medium mb-1">Energia Entregue</span>
@@ -131,7 +131,7 @@ export default function ChargingStatus(): JSX.Element {
               </div>
             </div>
 
-            {/* Barra de Progresso */}
+            {/* Barra de Progresso Linear */}
             <div className="w-full space-y-2">
               <div className="h-2 w-full bg-gray-100 rounded-full overflow-hidden">
                 <div
@@ -146,7 +146,7 @@ export default function ChargingStatus(): JSX.Element {
           </div>
         </div>
 
-        {/* FOOTER: Adicionado pb-10 */}
+        {/* FOOTER: Adicionado pb-10 para evitar corte no mobile */}
         <div className="flex-shrink-0 p-6 pb-10 sm:pb-6 bg-white z-20">
           <button
             onClick={handleCancel}

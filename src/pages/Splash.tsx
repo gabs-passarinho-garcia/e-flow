@@ -18,8 +18,8 @@ export default function Splash(): JSX.Element {
   }, [navigate]);
 
   return (
-    // CORREÇÃO: h-[100dvh] em vez de min-h-screen para centralização perfeita no mobile
-    <div className="h-[100dvh] bg-white relative overflow-hidden flex flex-col items-center justify-center">
+    // CORREÇÃO: h-full para ocupar 100% do #root sem vazar
+    <div className="h-full w-full bg-white relative overflow-hidden flex flex-col items-center justify-center">
       {/* === GRUPO SUPERIOR DIREITO === */}
       <div className="absolute -top-10 -right-24 transform -rotate-45 opacity-90 flex flex-col gap-4 scale-125">
         <div className="flex gap-4 justify-end">
@@ -32,12 +32,14 @@ export default function Splash(): JSX.Element {
             style={{ animationDelay: '0.2s' }}
           ></div>
         </div>
+
         <div className="flex justify-end mr-8">
           <div
             className="w-40 h-10 bg-primary-400 rounded-full shadow-sm animate-slide-in-right"
             style={{ animationDelay: '0.3s' }}
           ></div>
         </div>
+
         <div className="flex justify-end mr-4">
           <div
             className="w-32 h-10 bg-secondary-orange rounded-full shadow-sm animate-slide-in-right"
@@ -75,12 +77,14 @@ export default function Splash(): JSX.Element {
             style={{ animationDelay: '0.1s' }}
           ></div>
         </div>
+
         <div className="flex justify-start ml-8">
           <div
             className="w-40 h-10 bg-secondary-purple rounded-full shadow-sm animate-slide-in-left"
             style={{ animationDelay: '0.2s' }}
           ></div>
         </div>
+
         <div className="flex gap-4 justify-start">
           <div
             className="w-16 h-10 bg-secondary-orange rounded-full shadow-sm animate-slide-in-left"
