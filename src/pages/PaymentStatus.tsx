@@ -63,15 +63,15 @@ export default function PaymentStatus() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-white px-4">
       <div className="w-full max-w-md">
-        <div className="card text-center">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center">
           {payment?.status === 'completed' ? (
             <>
               <div className="mb-6">
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-12 h-12 text-green-600"
+                    className="w-16 h-16 text-green-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -79,7 +79,7 @@ export default function PaymentStatus() {
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
-                      strokeWidth={2}
+                      strokeWidth={3}
                       d="M5 13l4 4L19 7"
                     />
                   </svg>
@@ -87,7 +87,7 @@ export default function PaymentStatus() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
                   Pagamento Aprovado!
                 </h2>
-                <p className="text-gray-600 mb-4">
+                <p className="text-[#767676] mb-4">
                   R$ {payment.amount.toFixed(2)} processado com sucesso
                 </p>
               </div>
@@ -95,12 +95,12 @@ export default function PaymentStatus() {
               {starting ? (
                 <div className="space-y-4">
                   <div className="w-16 h-16 border-4 border-primary-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                  <p className="text-gray-600">Iniciando carregamento...</p>
+                  <p className="text-[#767676]">Iniciando carregamento...</p>
                 </div>
               ) : (
                 <button
                   onClick={handleStartCharging}
-                  className="btn-primary w-full"
+                  className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all"
                 >
                   Iniciar Carregamento
                 </button>
@@ -109,9 +109,9 @@ export default function PaymentStatus() {
           ) : (
             <>
               <div className="mb-6">
-                <div className="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div className="w-24 h-24 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg
-                    className="w-12 h-12 text-yellow-600 animate-spin"
+                    className="w-16 h-16 text-yellow-600 animate-spin"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -127,7 +127,7 @@ export default function PaymentStatus() {
                 <h2 className="text-2xl font-bold text-gray-900 mb-2">
                   Processando Pagamento...
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-[#767676]">
                   Aguarde enquanto processamos seu pagamento
                 </p>
               </div>

@@ -69,17 +69,17 @@ export default function MapView() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-white overflow-hidden">
       {/* Header */}
-      <header className="bg-white shadow-sm px-4 py-4">
+      <header className="bg-white px-4 py-4 flex-shrink-0">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-xl font-bold text-gray-900">E-Flow</h1>
-            <p className="text-sm text-gray-600">Olá, {user?.name}</p>
+            <p className="text-sm text-[#767676]">Olá, {user?.name}</p>
           </div>
           <button
             onClick={handleLogout}
-            className="btn-secondary text-sm"
+            className="text-[#767676] hover:text-gray-900 text-sm font-medium"
           >
             Sair
           </button>
@@ -87,24 +87,24 @@ export default function MapView() {
       </header>
 
       {/* Filters */}
-      <div className="bg-white border-b px-4 py-3">
+      <div className="bg-white px-4 py-3 flex-shrink-0">
         <div className="flex gap-2">
           <button
             onClick={() => setSelectedFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-[17px] text-sm font-medium transition-colors ${
               selectedFilter === 'all'
-                ? 'bg-primary-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-white text-gray-900 shadow-md'
+                : 'bg-transparent text-[#767676] hover:text-gray-900'
             }`}
           >
             Todas
           </button>
           <button
             onClick={() => setSelectedFilter('available')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-[17px] text-sm font-medium transition-colors ${
               selectedFilter === 'available'
-                ? 'bg-primary-600 text-white'
-                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                ? 'bg-white text-gray-900 shadow-md'
+                : 'bg-transparent text-[#767676] hover:text-gray-900'
             }`}
           >
             Disponíveis
@@ -113,11 +113,12 @@ export default function MapView() {
       </div>
 
       {/* Map */}
-      <div className="flex-1 relative">
+      <div className="flex-1 relative overflow-hidden">
         <MapContainer
           center={center}
           zoom={12}
-          style={{ height: '100%', width: '100%' }}
+          style={{ height: '100%', width: '100%', zIndex: 0 }}
+          scrollWheelZoom={true}
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

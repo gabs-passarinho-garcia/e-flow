@@ -61,24 +61,27 @@ export default function StationDetail() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-sm px-4 py-4">
+      <header className="bg-white px-4 py-4">
         <button
           onClick={() => navigate('/map')}
-          className="text-primary-600 hover:text-primary-700 font-medium"
+          className="text-[#767676] hover:text-gray-900 font-medium flex items-center gap-2"
         >
-          ← Voltar
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Voltar
         </button>
       </header>
 
       <div className="px-4 py-6 space-y-6">
         {/* Station Info Card */}
-        <div className="card">
+        <div className="bg-white rounded-2xl shadow-lg p-6">
           <div className="flex items-start justify-between mb-4">
-            <div>
+            <div className="flex-1">
               <h1 className="text-2xl font-bold text-gray-900 mb-2">{station.name}</h1>
-              <p className="text-gray-600">{station.address}</p>
+              <p className="text-[#767676] text-sm">{station.address}</p>
             </div>
             <span className={`px-3 py-1 rounded-full text-sm font-medium ${
               station.available
@@ -91,30 +94,30 @@ export default function StationDetail() {
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-sm text-gray-600 mb-1">Potência</p>
+              <p className="text-sm text-[#767676] mb-1">Potência</p>
               <p className="text-lg font-semibold text-gray-900">{station.power} kW</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Preço</p>
+              <p className="text-sm text-[#767676] mb-1">Preço</p>
               <p className="text-lg font-semibold text-gray-900">R$ {station.pricePerKwh.toFixed(2)}/kWh</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Avaliação</p>
+              <p className="text-sm text-[#767676] mb-1">Avaliação</p>
               <p className="text-lg font-semibold text-gray-900">⭐ {station.rating}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-600 mb-1">Conectores</p>
+              <p className="text-sm text-[#767676] mb-1">Conectores</p>
               <p className="text-lg font-semibold text-gray-900">{station.connectorType.length}</p>
             </div>
           </div>
 
           <div>
-            <p className="text-sm text-gray-600 mb-2">Tipos de Conectores:</p>
+            <p className="text-sm text-[#767676] mb-2">Tipos de Conectores:</p>
             <div className="flex flex-wrap gap-2">
               {station.connectorType.map((type) => (
                 <span
                   key={type}
-                  className="px-3 py-1 bg-primary-100 text-primary-800 rounded-lg text-sm"
+                  className="px-3 py-1 bg-gray-100 text-gray-800 rounded-lg text-sm"
                 >
                   {type}
                 </span>
@@ -127,7 +130,7 @@ export default function StationDetail() {
         <button
           onClick={handleStartCharging}
           disabled={!station.available}
-          className={`btn-primary w-full ${
+          className={`w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             !station.available ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >

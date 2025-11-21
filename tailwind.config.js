@@ -14,10 +14,16 @@ export default {
           300: '#86efac',
           400: '#4ade80',
           500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
+          600: '#DAF819', // Verde amarelo do design
+          700: '#D3FB16', // Verde amarelo mais claro
+          800: '#B8D500', // Verde amarelo escuro
           900: '#14532d',
+        },
+        accent: {
+          blue: '#A1D0FE',
+          purple: '#685BC6',
+          red: '#FE5729',
+          orange: '#FB3F20',
         },
       },
     },

@@ -74,9 +74,9 @@ export default function Success() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-white flex items-center justify-center px-4">
       <div className="w-full max-w-md">
-        <div className="card text-center space-y-6">
+        <div className="bg-white rounded-2xl shadow-lg p-8 text-center space-y-6">
           {/* Success Icon */}
           <div className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center mx-auto">
             <svg
@@ -88,7 +88,7 @@ export default function Success() {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth={2}
+                strokeWidth={3}
                 d="M5 13l4 4L19 7"
               />
             </svg>
@@ -98,7 +98,7 @@ export default function Success() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               Carregamento Concluído!
             </h1>
-            <p className="text-gray-600">
+            <p className="text-[#767676]">
               Seu veículo está pronto para a estrada
             </p>
           </div>
@@ -107,28 +107,28 @@ export default function Success() {
           <div className="bg-gray-50 rounded-lg p-6 space-y-4 text-left">
             {station && (
               <div>
-                <p className="text-sm text-gray-600 mb-1">Estação</p>
+                <p className="text-sm text-[#767676] mb-1">Estação</p>
                 <p className="font-semibold text-gray-900">{station.name}</p>
               </div>
             )}
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <p className="text-sm text-gray-600 mb-1">Energia Entregue</p>
+                <p className="text-sm text-[#767676] mb-1">Energia Entregue</p>
                 <p className="text-xl font-bold text-gray-900">
                   {session.energyDelivered.toFixed(1)} kWh
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-600 mb-1">Duração</p>
+                <p className="text-sm text-[#767676] mb-1">Duração</p>
                 <p className="text-xl font-bold text-gray-900">{duration} min</p>
               </div>
             </div>
 
             {payment && (
-              <div className="border-t pt-4">
+              <div className="border-t border-gray-200 pt-4">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Total Pago</span>
+                  <span className="text-[#767676]">Total Pago</span>
                   <span className="text-2xl font-bold text-primary-600">
                     R$ {payment.amount.toFixed(2)}
                   </span>
@@ -138,7 +138,10 @@ export default function Success() {
           </div>
 
           {/* Action Button */}
-          <button onClick={handleBackToMap} className="btn-primary w-full">
+          <button 
+            onClick={handleBackToMap} 
+            className="w-full bg-primary-600 text-gray-900 font-semibold py-3 px-6 rounded-[15px] hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-600 focus:ring-offset-2 transition-all"
+          >
             Voltar ao Mapa
           </button>
         </div>
