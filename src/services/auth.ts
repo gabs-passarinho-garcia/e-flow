@@ -25,13 +25,17 @@ const MOCK_USERS: User[] = [
  * Mock login function
  * Accepts any email/password combination and returns a user
  */
-export const login = async (email: string, password: string): Promise<User> => {
+export const login = async (
+  email: string,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _password: string,
+): Promise<User> => {
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // Find user or create a new one
   let user = MOCK_USERS.find((u) => u.email === email);
-  
+
   if (!user) {
     user = {
       id: Date.now().toString(),
@@ -70,4 +74,3 @@ export const getCurrentUser = (): User | null => {
 export const isAuthenticated = (): boolean => {
   return getCurrentUser() !== null;
 };
-

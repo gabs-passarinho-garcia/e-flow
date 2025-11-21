@@ -5,6 +5,10 @@ import type { Station } from '../types';
  * Provides mock data for charging stations
  */
 
+const CONNECTOR_TYPE_2 = 'Type 2 (Mennekes)';
+const CONNECTOR_CCS = 'CCS (Combo)';
+const CONNECTOR_CHADEMO = 'CHAdeMO';
+
 const MOCK_STATIONS: Station[] = [
   {
     id: '1',
@@ -13,7 +17,7 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.5005,
     longitude: -46.6333,
     available: true,
-    connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)'],
+    connectorType: [CONNECTOR_TYPE_2, CONNECTOR_CCS],
     power: 50,
     pricePerKwh: 0.85,
     rating: 4.5,
@@ -25,7 +29,7 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.5874,
     longitude: -46.6576,
     available: true,
-    connectorType: ['Type 2 (Mennekes)', 'CHAdeMO'],
+    connectorType: [CONNECTOR_TYPE_2, CONNECTOR_CHADEMO],
     power: 22,
     pricePerKwh: 0.75,
     rating: 4.8,
@@ -37,9 +41,9 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.5614,
     longitude: -46.6565,
     available: false,
-    connectorType: ['CCS (Combo)', 'Type 2 (Mennekes)'],
+    connectorType: [CONNECTOR_CCS, CONNECTOR_TYPE_2],
     power: 150,
-    pricePerKwh: 1.20,
+    pricePerKwh: 1.2,
     rating: 4.2,
   },
   {
@@ -49,9 +53,9 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.6214,
     longitude: -46.6995,
     available: true,
-    connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)', 'CHAdeMO'],
+    connectorType: [CONNECTOR_TYPE_2, CONNECTOR_CCS, CONNECTOR_CHADEMO],
     power: 50,
-    pricePerKwh: 0.90,
+    pricePerKwh: 0.9,
     rating: 4.6,
   },
   {
@@ -61,9 +65,9 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.6267,
     longitude: -46.6564,
     available: true,
-    connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)'],
+    connectorType: [CONNECTOR_TYPE_2, CONNECTOR_CCS],
     power: 22,
-    pricePerKwh: 1.00,
+    pricePerKwh: 1.0,
     rating: 4.3,
   },
   {
@@ -73,9 +77,9 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.5456,
     longitude: -46.7289,
     available: true,
-    connectorType: ['Type 2 (Mennekes)'],
+    connectorType: [CONNECTOR_TYPE_2],
     power: 22,
-    pricePerKwh: 0.70,
+    pricePerKwh: 0.7,
     rating: 4.7,
   },
   // NOVAS ESTAÇÕES ABC PAULISTA
@@ -86,7 +90,7 @@ const MOCK_STATIONS: Station[] = [
     latitude: -23.6599, // Perto de Santo André (sua cidade! 😉)
     longitude: -46.5367,
     available: true,
-    connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)'],
+    connectorType: [CONNECTOR_TYPE_2, CONNECTOR_CCS],
     power: 75,
     pricePerKwh: 0.95,
     rating: 4.4,
@@ -96,23 +100,23 @@ const MOCK_STATIONS: Station[] = [
     name: 'Estação Shopping Metrópole',
     address: 'Pça. Samuel Sabatini, 200 - Centro, São Bernardo do Campo - SP',
     latitude: -23.6896, // Perto de São Bernardo (sua cidade natal!)
-    longitude: -46.5670,
+    longitude: -46.567,
     available: false, // Deixando indisponível pra testar o filtro
-    connectorType: ['CCS (Combo)', 'CHAdeMO'],
+    connectorType: [CONNECTOR_CCS, CONNECTOR_CHADEMO],
     power: 100,
-    pricePerKwh: 1.10,
+    pricePerKwh: 1.1,
     rating: 4.9,
   },
   {
     id: '9',
     name: 'Estação Park Shopping São Caetano',
     address: 'Estrada das Lágrimas, 855 - São José, São Caetano do Sul - SP',
-    latitude: -23.6300, 
-    longitude: -46.5510,
+    latitude: -23.63,
+    longitude: -46.551,
     available: true,
-    connectorType: ['Type 2 (Mennekes)'],
+    connectorType: [CONNECTOR_TYPE_2],
     power: 22,
-    pricePerKwh: 0.80,
+    pricePerKwh: 0.8,
     rating: 4.1,
   },
 ];

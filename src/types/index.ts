@@ -23,7 +23,7 @@ export interface Station {
   imageUrl?: string;
 }
 
-export type ConnectorType = 
+export type ConnectorType =
   | 'Type 1 (J1772)'
   | 'Type 2 (Mennekes)'
   | 'CCS (Combo)'
@@ -32,7 +32,7 @@ export type ConnectorType =
 
 export interface PaymentMethod {
   id: string;
-  type: 'credit' | 'debit' | 'pix';
+  type: 'credit' | 'debit' | 'pix' | 'digital_wallet'; // Adicionado 'digital_wallet'
   last4?: string;
   brand?: string;
 }
@@ -59,4 +59,3 @@ export interface ChargingSession {
   estimatedTimeRemaining: number; // minutes
   status: 'starting' | 'charging' | 'completed' | 'cancelled';
 }
-

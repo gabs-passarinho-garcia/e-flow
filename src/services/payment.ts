@@ -13,7 +13,7 @@ export const processPayment = async (
   stationId: string,
   userId: string,
   amount: number,
-  method: PaymentMethod
+  method: PaymentMethod,
 ): Promise<Payment> => {
   // Simulate payment processing delay
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -37,7 +37,10 @@ export const processPayment = async (
 /**
  * Get payment by ID
  */
-export const getPaymentById = async (id: string): Promise<Payment | null> => {
+export const getPaymentById = async (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _id: string,
+): Promise<Payment | null> => {
   await new Promise((resolve) => setTimeout(resolve, 300));
   return storage.getPayment<Payment>();
 };
@@ -47,7 +50,7 @@ export const getPaymentById = async (id: string): Promise<Payment | null> => {
  */
 export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  
+
   return [
     {
       id: '1',
@@ -67,4 +70,3 @@ export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
     },
   ];
 };
-

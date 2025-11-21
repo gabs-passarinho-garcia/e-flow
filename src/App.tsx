@@ -12,47 +12,54 @@ import Success from './pages/Success';
 import { isAuthenticated } from './services/auth';
 import { usePWAInstall } from './hooks/usePWAInstall';
 
+const PWA_PROMPT_SHOWN_KEY = 'pwa-install-prompt-shown';
+
 /**
  * Main App component with routing
  */
-function App() {
+function App(): JSX.Element {
   const { showInstallPrompt, installApp } = usePWAInstall();
 
   useEffect(() => {
     // Register service worker for PWA
     const updateSW = registerSW({
-      onNeedRefresh() {
+      onNeedRefresh(): void {
         // Optionally show a notification to the user
-        console.log('New content available, please refresh.');
+        console.info('New content available, please refresh.');
       },
-      onOfflineReady() {
-        console.log('App ready to work offline');
+      onOfflineReady(): void {
+        console.info('App ready to work offline');
       },
     });
 
     // Check for updates periodically
-    setInterval(() => {
-      updateSW(true);
-    }, 60 * 60 * 1000); // Check every hour
+    setInterval(
+      () => {
+        void updateSW(true);
+      },
+      60 * 60 * 1000,
+    ); // Check every hour
   }, []);
 
   // Auto-show install prompt when app loads (if not already installed)
   useEffect(() => {
     // Only show on first visit, not if already installed
     const isInstalled = window.matchMedia('(display-mode: standalone)').matches;
-    const hasSeenPrompt = sessionStorage.getItem('pwa-install-prompt-shown');
+    const hasSeenPrompt = sessionStorage.getItem(PWA_PROMPT_SHOWN_KEY);
 
     if (!isInstalled && !hasSeenPrompt && showInstallPrompt) {
       // Small delay to ensure page is fully loaded and user sees the app
-      const timer = setTimeout(() => {
-        installApp().then(() => {
-          sessionStorage.setItem('pwa-install-prompt-shown', 'true');
-        }).catch(() => {
-          // User dismissed, don't show again this session
-          sessionStorage.setItem('pwa-install-prompt-shown', 'true');
-        });
+      const timer = setTimeout((): void => {
+        void installApp()
+          .then(() => {
+            sessionStorage.setItem(PWA_PROMPT_SHOWN_KEY, 'true');
+          })
+          .catch(() => {
+            // User dismissed, don't show again this session
+            sessionStorage.setItem(PWA_PROMPT_SHOWN_KEY, 'true');
+          });
       }, 3000); // 3 seconds delay to let user see the app first
-      return () => clearTimeout(timer);
+      return (): void => clearTimeout(timer);
     }
   }, [showInstallPrompt, installApp]);
 
@@ -109,7 +116,7 @@ function App() {
 /**
  * Protected route component - redirects to login if not authenticated
  */
-function ProtectedRoute({ children }: { children: React.ReactNode }) {
+function ProtectedRoute({ children }: { children: React.ReactNode }): JSX.Element {
   if (!isAuthenticated()) {
     return <Navigate to="/login" replace />;
   }

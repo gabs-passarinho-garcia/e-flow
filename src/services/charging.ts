@@ -16,7 +16,7 @@ let progressCallback: ((session: ChargingSession) => void) | null = null;
 export const startCharging = async (
   stationId: string,
   userId: string,
-  paymentId: string
+  paymentId: string,
 ): Promise<ChargingSession> => {
   await new Promise((resolve) => setTimeout(resolve, 1000));
 
@@ -39,20 +39,17 @@ export const startCharging = async (
   setTimeout(() => {
     session.status = 'charging';
     storage.saveSession(session);
-    
+
     chargingInterval = setInterval(() => {
       if (!currentSession) return;
 
       // Increase battery by ~2% every 2 seconds
-      currentSession.currentBattery = Math.min(
-        currentSession.currentBattery + 2,
-        100
-      );
-      
+      currentSession.currentBattery = Math.min(currentSession.currentBattery + 2, 100);
+
       // Decrease estimated time
       currentSession.estimatedTimeRemaining = Math.max(
         currentSession.estimatedTimeRemaining - 1,
-        0
+        0,
       );
 
       // Increase energy delivered
@@ -69,7 +66,7 @@ export const startCharging = async (
       }
 
       storage.saveSession(currentSession);
-      
+
       if (progressCallback) {
         progressCallback({ ...currentSession });
       }
@@ -92,7 +89,7 @@ export const getCurrentSession = async (): Promise<ChargingSession | null> => {
  */
 export const cancelCharging = async (): Promise<void> => {
   await new Promise((resolve) => setTimeout(resolve, 500));
-  
+
   if (currentSession) {
     currentSession.status = 'cancelled';
     currentSession.endTime = new Date();
@@ -110,14 +107,11 @@ export const cancelCharging = async (): Promise<void> => {
 /**
  * Subscribe to charging progress updates
  */
-export const onChargingProgress = (
-  callback: (session: ChargingSession) => void
-): (() => void) => {
+export const onChargingProgress = (callback: (session: ChargingSession) => void): (() => void) => {
   progressCallback = callback;
-  
+
   // Return unsubscribe function
   return () => {
     progressCallback = null;
   };
 };
-
