@@ -2,6 +2,7 @@
  * Global test setup file
  * Configures testing environment and utilities
  */
+import { afterEach } from 'bun:test';
 import '@testing-library/jest-dom';
 
 // Initialize DOM environment with happy-dom

@@ -32,7 +32,7 @@ const UserLocationIcon = L.divIcon({
   iconAnchor: [32, 32],
 });
 
-export default function MapView() {
+export default function MapView(): JSX.Element {
   const navigate = useNavigate();
   const [stations, setStations] = useState<Station[]>([]);
   const [isRouting, setIsRouting] = useState(false);
@@ -48,10 +48,10 @@ export default function MapView() {
   ];
 
   useEffect(() => {
-    getAllStations().then(setStations);
+    void getAllStations().then(setStations);
   }, []);
 
-  const toggleRouteMode = () => setIsRouting(!isRouting);
+  const toggleRouteMode = (): void => setIsRouting(!isRouting);
 
   return (
     <div className="h-screen w-full relative overflow-hidden bg-gray-100">

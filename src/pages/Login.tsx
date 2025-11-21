@@ -2,13 +2,13 @@ import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/auth';
 
-export default function Login() {
+export default function Login(): JSX.Element {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent): Promise<void> => {
     e.preventDefault();
     setLoading(true);
     try {

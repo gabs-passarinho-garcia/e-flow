@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isAuthenticated } from '../services/auth';
 
-export default function Splash() {
+export default function Splash(): JSX.Element {
   const navigate = useNavigate();
 
   useEffect(() => {
     // Simula um carregamento inicial mais longo (5 segundos)
     // Isso permite apreciar a animação de entrada e dá peso ao app
-    const timer = setTimeout(() => {
+    const timer = setTimeout((): void => {
       if (isAuthenticated()) {
         navigate('/map');
       } else {
@@ -16,7 +16,7 @@ export default function Splash() {
       }
     }, 5000); // 5000ms = 5 segundos
 
-    return () => clearTimeout(timer);
+    return (): void => clearTimeout(timer);
   }, [navigate]);
 
   return (

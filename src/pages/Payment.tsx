@@ -5,7 +5,16 @@ import { getPaymentMethods, processPayment } from '../services/payment';
 import { getCurrentUser } from '../services/auth';
 import type { Station, PaymentMethod } from '../types';
 
-export default function Payment() {
+const PAYMENT_METHOD_APPLE = 'apple_pay';
+const PAYMENT_METHOD_GOOGLE = 'google_pay';
+const BORDER_BLACK_CLASS = 'border-black';
+const BORDER_GRAY_CLASS = 'border-gray-300';
+const TEXT_GRAY_900_CLASS = 'text-gray-900';
+const TEXT_GRAY_700_CLASS = 'text-gray-700';
+const BORDER_GRAY_200_CLASS = 'border-gray-200';
+const HOVER_BORDER_GRAY_300_CLASS = 'hover:border-gray-300';
+
+export default function Payment(): JSX.Element {
   const { stationId } = useParams<{ stationId: string }>();
   const navigate = useNavigate();
   const [station, setStation] = useState<Station | null>(null);
@@ -15,16 +24,12 @@ export default function Payment() {
   const [processing, setProcessing] = useState(false);
   const user = getCurrentUser();
 
-  useEffect(() => {
-    if (stationId) {
-      loadData();
-    }
-  }, [stationId]);
+  const loadData = async (): Promise<void> => {
+    if (!stationId) return;
 
-  const loadData = async () => {
     try {
       const [stationData, methods] = await Promise.all([
-        getStationById(stationId!),
+        getStationById(stationId),
         getPaymentMethods(),
       ]);
       setStation(stationData);
@@ -39,7 +44,12 @@ export default function Payment() {
     }
   };
 
-  const handleSubmit = async () => {
+  useEffect(() => {
+    void loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stationId]);
+
+  const handleSubmit = async (): Promise<void> => {
     if (!station || !selectedMethod || !user) return;
 
     setProcessing(true);
@@ -215,8 +225,8 @@ export default function Payment() {
                     key={method.id}
                     className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all active:scale-[0.99] ${
                       selectedMethod === method.id
-                        ? 'border-black bg-gray-50 shadow-sm'
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? `${BORDER_BLACK_CLASS} bg-gray-50 shadow-sm`
+                        : `${BORDER_GRAY_200_CLASS} ${HOVER_BORDER_GRAY_300_CLASS}`
                     }`}
                   >
                     <div className="flex-1 flex items-center gap-3">
@@ -230,7 +240,7 @@ export default function Payment() {
 
                       <div className="flex flex-col">
                         <span
-                          className={`font-semibold text-sm ${selectedMethod === method.id ? 'text-gray-900' : 'text-gray-700'}`}
+                          className={`font-semibold text-sm ${selectedMethod === method.id ? TEXT_GRAY_900_CLASS : TEXT_GRAY_700_CLASS}`}
                         >
                           {method.type === 'credit' && 'Cartão de Crédito'}
                           {method.type === 'debit' && 'Cartão de Débito'}
@@ -246,7 +256,7 @@ export default function Payment() {
 
                     <div
                       className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                        selectedMethod === method.id ? 'border-black' : 'border-gray-300'
+                        selectedMethod === method.id ? BORDER_BLACK_CLASS : BORDER_GRAY_CLASS
                       }`}
                     >
                       {selectedMethod === method.id && (
@@ -268,7 +278,7 @@ export default function Payment() {
                 {/* Apple Pay */}
                 <label
                   className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all active:scale-[0.99] ${
-                    selectedMethod === 'apple_pay'
+                    selectedMethod === PAYMENT_METHOD_APPLE
                       ? 'border-black bg-gray-50 shadow-sm'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
@@ -281,25 +291,27 @@ export default function Payment() {
                       </svg>
                     </div>
                     <span
-                      className={`font-semibold text-sm ${selectedMethod === 'apple_pay' ? 'text-gray-900' : 'text-gray-700'}`}
+                      className={`font-semibold text-sm ${selectedMethod === PAYMENT_METHOD_APPLE ? TEXT_GRAY_900_CLASS : TEXT_GRAY_700_CLASS}`}
                     >
                       Apple Pay
                     </span>
                   </div>
                   <div
                     className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                      selectedMethod === 'apple_pay' ? 'border-black' : 'border-gray-300'
+                      selectedMethod === PAYMENT_METHOD_APPLE
+                        ? BORDER_BLACK_CLASS
+                        : BORDER_GRAY_CLASS
                     }`}
                   >
-                    {selectedMethod === 'apple_pay' && (
+                    {selectedMethod === PAYMENT_METHOD_APPLE && (
                       <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
                     )}
                   </div>
                   <input
                     type="radio"
                     name="paymentMethod"
-                    value="apple_pay"
-                    checked={selectedMethod === 'apple_pay'}
+                    value={PAYMENT_METHOD_APPLE}
+                    checked={selectedMethod === PAYMENT_METHOD_APPLE}
                     onChange={(e) => setSelectedMethod(e.target.value)}
                     className="hidden"
                   />
@@ -308,7 +320,7 @@ export default function Payment() {
                 {/* Google Pay */}
                 <label
                   className={`flex items-center p-4 border rounded-2xl cursor-pointer transition-all active:scale-[0.99] ${
-                    selectedMethod === 'google_pay'
+                    selectedMethod === PAYMENT_METHOD_GOOGLE
                       ? 'border-black bg-gray-50 shadow-sm'
                       : 'border-gray-200 hover:border-gray-300'
                   }`}
@@ -336,25 +348,27 @@ export default function Payment() {
                       </svg>
                     </div>
                     <span
-                      className={`font-semibold text-sm ${selectedMethod === 'google_pay' ? 'text-gray-900' : 'text-gray-700'}`}
+                      className={`font-semibold text-sm ${selectedMethod === PAYMENT_METHOD_GOOGLE ? TEXT_GRAY_900_CLASS : TEXT_GRAY_700_CLASS}`}
                     >
                       Google Pay
                     </span>
                   </div>
                   <div
                     className={`w-5 h-5 rounded-full border flex items-center justify-center ${
-                      selectedMethod === 'google_pay' ? 'border-black' : 'border-gray-300'
+                      selectedMethod === PAYMENT_METHOD_GOOGLE
+                        ? BORDER_BLACK_CLASS
+                        : BORDER_GRAY_CLASS
                     }`}
                   >
-                    {selectedMethod === 'google_pay' && (
+                    {selectedMethod === PAYMENT_METHOD_GOOGLE && (
                       <div className="w-2.5 h-2.5 bg-black rounded-full"></div>
                     )}
                   </div>
                   <input
                     type="radio"
                     name="paymentMethod"
-                    value="google_pay"
-                    checked={selectedMethod === 'google_pay'}
+                    value={PAYMENT_METHOD_GOOGLE}
+                    checked={selectedMethod === PAYMENT_METHOD_GOOGLE}
                     onChange={(e) => setSelectedMethod(e.target.value)}
                     className="hidden"
                   />

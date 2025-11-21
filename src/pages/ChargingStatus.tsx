@@ -7,33 +7,13 @@ import type { ChargingSession } from '../types';
  * Charging status page component
  * Shows real-time charging progress
  */
-export default function ChargingStatus() {
+export default function ChargingStatus(): JSX.Element {
   const navigate = useNavigate();
   const [session, setSession] = useState<ChargingSession | null>(null);
   const [loading, setLoading] = useState(true);
   const [cancelling, setCancelling] = useState(false);
 
-  useEffect(() => {
-    loadSession();
-
-    // Subscribe to progress updates
-    const unsubscribe = onChargingProgress((updatedSession) => {
-      setSession(updatedSession);
-
-      // Navigate to success when complete
-      if (updatedSession.status === 'completed') {
-        setTimeout(() => {
-          navigate('/success');
-        }, 2000);
-      }
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, [navigate]);
-
-  const loadSession = async () => {
+  const loadSession = async (): Promise<void> => {
     try {
       const data = await getCurrentSession();
       setSession(data);
@@ -50,7 +30,28 @@ export default function ChargingStatus() {
     }
   };
 
-  const handleCancel = async () => {
+  useEffect(() => {
+    void loadSession();
+
+    // Subscribe to progress updates
+    const unsubscribe = onChargingProgress((updatedSession) => {
+      setSession(updatedSession);
+
+      // Navigate to success when complete
+      if (updatedSession.status === 'completed') {
+        setTimeout(() => {
+          navigate('/success');
+        }, 2000);
+      }
+    });
+
+    return (): void => {
+      unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigate]);
+
+  const handleCancel = async (): Promise<void> => {
     // Usando window.confirm simples por enquanto, mas idealmente seria um modal do design system
     if (!confirm('Tem certeza que deseja cancelar o carregamento?')) {
       return;

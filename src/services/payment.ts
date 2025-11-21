@@ -37,7 +37,10 @@ export const processPayment = async (
 /**
  * Get payment by ID
  */
-export const getPaymentById = async (id: string): Promise<Payment | null> => {
+export const getPaymentById = async (
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _id: string,
+): Promise<Payment | null> => {
   await new Promise((resolve) => setTimeout(resolve, 300));
   return storage.getPayment<Payment>();
 };

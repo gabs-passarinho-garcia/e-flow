@@ -4,11 +4,11 @@ import { startCharging } from '../services/charging';
 import { storage } from '../utils/storage';
 import type { Payment } from '../types';
 
-export default function PaymentStatus() {
+export default function PaymentStatus(): JSX.Element {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleStartSession = async () => {
+  const handleStartSession = async (): Promise<void> => {
     setIsLoading(true);
     try {
       // Recupera o último pagamento para pegar os IDs necessários

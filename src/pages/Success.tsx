@@ -10,16 +10,12 @@ import { storage } from '../utils/storage';
  * Success page component
  * Shows charging session summary
  */
-export default function Success() {
+export default function Success(): JSX.Element {
   const navigate = useNavigate();
   const [session, setSession] = useState<ChargingSession | null>(null);
   const [payment, setPayment] = useState<Payment | null>(null);
   const [station, setStation] = useState<Station | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   /**
    * Convert string date to Date object
@@ -34,7 +30,7 @@ export default function Success() {
     return null;
   };
 
-  const loadData = async () => {
+  const loadData = async (): Promise<void> => {
     try {
       const sessionData = await getCurrentSession();
 
@@ -67,7 +63,12 @@ export default function Success() {
     }
   };
 
-  const handleBackToMap = () => {
+  useEffect(() => {
+    void loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleBackToMap = (): void => {
     storage.removeSession();
     storage.removePayment();
     navigate('/map');
@@ -98,7 +99,9 @@ export default function Success() {
     );
   }
 
-  // Calculate duration safely
+  /**
+   * Calculate duration safely
+   */
   const calculateDuration = (): number => {
     if (!session) return 0;
 

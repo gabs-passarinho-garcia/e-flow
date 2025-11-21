@@ -9,12 +9,18 @@ interface BeforeInstallPromptEvent extends Event {
  * Hook to handle PWA install prompt
  * Shows install prompt automatically when available
  */
-export function usePWAInstall() {
+interface UsePWAInstallReturn {
+  showInstallPrompt: boolean;
+  installApp: () => Promise<void>;
+  canInstall: boolean;
+}
+
+export function usePWAInstall(): UsePWAInstallReturn {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
 
   useEffect(() => {
-    const handler = (e: Event) => {
+    const handler = (e: Event): void => {
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Save the event so it can be triggered later
@@ -30,12 +36,12 @@ export function usePWAInstall() {
       setShowInstallPrompt(false);
     }
 
-    return () => {
+    return (): void => {
       window.removeEventListener('beforeinstallprompt', handler);
     };
   }, []);
 
-  const installApp = async () => {
+  const installApp = async (): Promise<void> => {
     if (!deferredPrompt) return;
 
     // Show the install prompt
@@ -45,9 +51,9 @@ export function usePWAInstall() {
     const { outcome } = await deferredPrompt.userChoice;
 
     if (outcome === 'accepted') {
-      console.log('User accepted the install prompt');
+      console.info('User accepted the install prompt');
     } else {
-      console.log('User dismissed the install prompt');
+      console.info('User dismissed the install prompt');
     }
 
     // Clear the deferredPrompt

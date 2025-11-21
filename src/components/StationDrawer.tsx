@@ -6,10 +6,10 @@ interface StationDrawerProps {
   onClose: () => void;
 }
 
-export default function StationDrawer({ station, onClose }: StationDrawerProps) {
+export default function StationDrawer({ station, onClose }: StationDrawerProps): JSX.Element {
   const navigate = useNavigate();
 
-  const handleStartCharging = () => {
+  const handleStartCharging = (): void => {
     // Mantém a lógica de ir para o pagamento
     navigate(`/payment/${station.id}`);
   };
