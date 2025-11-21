@@ -75,4 +75,3 @@ export const storage = {
     localStorage.removeItem(STORAGE_KEYS.PAYMENT);
   },
 };
-

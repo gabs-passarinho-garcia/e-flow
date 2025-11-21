@@ -13,7 +13,7 @@ export const processPayment = async (
   stationId: string,
   userId: string,
   amount: number,
-  method: PaymentMethod
+  method: PaymentMethod,
 ): Promise<Payment> => {
   // Simulate payment processing delay
   await new Promise((resolve) => setTimeout(resolve, 2000));
@@ -47,7 +47,7 @@ export const getPaymentById = async (id: string): Promise<Payment | null> => {
  */
 export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
   await new Promise((resolve) => setTimeout(resolve, 300));
-  
+
   return [
     {
       id: '1',
@@ -67,4 +67,3 @@ export const getPaymentMethods = async (): Promise<PaymentMethod[]> => {
     },
   ];
 };
-

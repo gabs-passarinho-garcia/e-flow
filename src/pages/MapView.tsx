@@ -37,14 +37,14 @@ export default function MapView() {
   const [stations, setStations] = useState<Station[]>([]);
   const [isRouting, setIsRouting] = useState(false);
   const [selectedStation, setSelectedStation] = useState<Station | null>(null);
-  
+
   // Coordenadas para simular a rota roxa
   const routeCoordinates: [number, number][] = [
     [-23.5925, -46.5333], // Ponto A
-    [-23.5900, -46.5300],
-    [-23.5880, -46.5250],
-    [-23.5850, -46.5250],
-    [-23.5820, -46.5280], // Ponto B
+    [-23.59, -46.53],
+    [-23.588, -46.525],
+    [-23.585, -46.525],
+    [-23.582, -46.528], // Ponto B
   ];
 
   useEffect(() => {
@@ -62,10 +62,10 @@ export default function MapView() {
         style={{ height: '100%', width: '100%' }}
       >
         <TileLayer
-          attribution=''
+          attribution=""
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        
+
         <Marker position={[-23.5925, -46.5333]} icon={UserLocationIcon} />
 
         {stations.map((station) => (
@@ -80,40 +80,76 @@ export default function MapView() {
         ))}
 
         {isRouting && (
-          <Polyline 
-            positions={routeCoordinates} 
-            pathOptions={{ color: '#5B4EFF', weight: 6, opacity: 1, lineCap: 'round', lineJoin: 'round', dashArray: '1, 10', dashOffset: '10' }} 
+          <Polyline
+            positions={routeCoordinates}
+            pathOptions={{
+              color: '#5B4EFF',
+              weight: 6,
+              opacity: 1,
+              lineCap: 'round',
+              lineJoin: 'round',
+              dashArray: '1, 10',
+              dashOffset: '10',
+            }}
           />
         )}
       </MapContainer>
 
       {/* Drawer de Detalhes */}
       {selectedStation && (
-        <StationDrawer 
-          station={selectedStation} 
-          onClose={() => setSelectedStation(null)} 
-        />
+        <StationDrawer station={selectedStation} onClose={() => setSelectedStation(null)} />
       )}
 
       {/* === UI FLUTUANTE SOBRE O MAPA === */}
 
       {/* 1. Botões Laterais (Direita) */}
       <div className="absolute right-5 bottom-48 flex flex-col gap-3 z-[900]">
-        <button 
+        <button
           type="button"
           aria-label="Configurações do mapa"
           className="w-12 h-12 bg-white rounded-full shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-90 transition-all"
         >
           {/* Ícone de Ajustes/Filtro */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="4" y1="21" x2="4" y2="14"></line><line x1="4" y1="10" x2="4" y2="3"></line><line x1="12" y1="21" x2="12" y2="12"></line><line x1="12" y1="8" x2="12" y2="3"></line><line x1="20" y1="21" x2="20" y2="16"></line><line x1="20" y1="12" x2="20" y2="3"></line><line x1="1" y1="14" x2="7" y2="14"></line><line x1="9" y1="8" x2="15" y2="8"></line><line x1="17" y1="16" x2="23" y2="16"></line></svg>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="4" y1="21" x2="4" y2="14"></line>
+            <line x1="4" y1="10" x2="4" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="12"></line>
+            <line x1="12" y1="8" x2="12" y2="3"></line>
+            <line x1="20" y1="21" x2="20" y2="16"></line>
+            <line x1="20" y1="12" x2="20" y2="3"></line>
+            <line x1="1" y1="14" x2="7" y2="14"></line>
+            <line x1="9" y1="8" x2="15" y2="8"></line>
+            <line x1="17" y1="16" x2="23" y2="16"></line>
+          </svg>
         </button>
-        <button 
+        <button
           type="button"
           aria-label="Minha localização"
           className="w-12 h-12 bg-white rounded-full shadow-float flex items-center justify-center text-gray-700 hover:bg-gray-50 active:scale-90 transition-all"
         >
           {/* Ícone de Mira GPS */}
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"></circle><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon></svg>
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="12" cy="12" r="10"></circle>
+            <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+          </svg>
         </button>
       </div>
 
@@ -123,12 +159,12 @@ export default function MapView() {
         <button className="snap-start flex-shrink-0 bg-white border-2 border-[#2E9AFF] text-[#2E9AFF] font-bold px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform">
           Traçar rota
         </button>
-        
+
         {/* Chips Normais */}
         <button className="snap-start flex-shrink-0 bg-white text-gray-600 font-medium px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform border border-transparent hover:border-gray-200">
           Planejar Viagem
         </button>
-        
+
         <button className="snap-start flex-shrink-0 bg-white text-gray-600 font-medium px-5 py-2.5 rounded-full shadow-sm text-sm whitespace-nowrap active:scale-95 transition-transform border border-transparent hover:border-gray-200">
           Carregadores
         </button>
@@ -136,13 +172,21 @@ export default function MapView() {
 
       {/* 3. Barra de Navegação Inferior (Ícones Ajustados) */}
       <div className="absolute bottom-8 left-6 right-6 h-20 bg-white rounded-[2.5rem] shadow-[0_8px_30px_rgba(0,0,0,0.12)] z-[1000] grid grid-cols-4 items-center px-2">
-        
         {/* Início - Ícone de Carro */}
-        <button 
+        <button
           type="button"
           className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full"
         >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2" />
             <circle cx="7" cy="17" r="2" />
             <path d="M9 17h6" />
@@ -152,11 +196,20 @@ export default function MapView() {
         </button>
 
         {/* Estações - Ícone de Plug */}
-        <button 
+        <button
           type="button"
           className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full"
         >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
           </svg>
           <span className="text-[10px] font-bold">Estações</span>
@@ -164,13 +217,22 @@ export default function MapView() {
 
         {/* Botão Central (Mapa) - Destaque Amarelo */}
         <div className="relative -top-1">
-          <button 
+          <button
             type="button"
-            aria-label={isRouting ? "Sair do modo rota" : "Modo Mapa"}
-            onClick={toggleRouteMode} 
+            aria-label={isRouting ? 'Sair do modo rota' : 'Modo Mapa'}
+            onClick={toggleRouteMode}
             className="w-16 h-16 bg-primary-400 rounded-full shadow-lg flex items-center justify-center transition-transform active:scale-90 border-4 border-gray-100"
           >
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="black" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="28"
+              height="28"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="black"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"></polygon>
               <line x1="8" y1="2" x2="8" y2="18"></line>
               <line x1="16" y1="6" x2="16" y2="22"></line>
@@ -179,18 +241,26 @@ export default function MapView() {
         </div>
 
         {/* Perfil - Ícone de Usuário */}
-        <button 
+        <button
           type="button"
-          className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full" 
+          className="flex flex-col items-center justify-center gap-1 text-gray-400 hover:text-gray-900 transition-colors h-full w-full"
           onClick={() => navigate('/login')}
         >
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="26"
+            height="26"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
           <span className="text-[10px] font-bold">Perfil</span>
         </button>
-
       </div>
     </div>
   );

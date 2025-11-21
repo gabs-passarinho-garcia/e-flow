@@ -31,9 +31,12 @@ function App() {
     });
 
     // Check for updates periodically
-    setInterval(() => {
-      updateSW(true);
-    }, 60 * 60 * 1000); // Check every hour
+    setInterval(
+      () => {
+        updateSW(true);
+      },
+      60 * 60 * 1000,
+    ); // Check every hour
   }, []);
 
   // Auto-show install prompt when app loads (if not already installed)
@@ -45,12 +48,14 @@ function App() {
     if (!isInstalled && !hasSeenPrompt && showInstallPrompt) {
       // Small delay to ensure page is fully loaded and user sees the app
       const timer = setTimeout(() => {
-        installApp().then(() => {
-          sessionStorage.setItem('pwa-install-prompt-shown', 'true');
-        }).catch(() => {
-          // User dismissed, don't show again this session
-          sessionStorage.setItem('pwa-install-prompt-shown', 'true');
-        });
+        installApp()
+          .then(() => {
+            sessionStorage.setItem('pwa-install-prompt-shown', 'true');
+          })
+          .catch(() => {
+            // User dismissed, don't show again this session
+            sessionStorage.setItem('pwa-install-prompt-shown', 'true');
+          });
       }, 3000); // 3 seconds delay to let user see the app first
       return () => clearTimeout(timer);
     }

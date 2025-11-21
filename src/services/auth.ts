@@ -31,7 +31,7 @@ export const login = async (email: string, password: string): Promise<User> => {
 
   // Find user or create a new one
   let user = MOCK_USERS.find((u) => u.email === email);
-  
+
   if (!user) {
     user = {
       id: Date.now().toString(),
@@ -70,4 +70,3 @@ export const getCurrentUser = (): User | null => {
 export const isAuthenticated = (): boolean => {
   return getCurrentUser() !== null;
 };
-

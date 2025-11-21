@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bun test" tests="10" assertions="20" failures="0" skipped="0" time="9.680731143">
+  <testsuite name="src/services/__tests__/auth.test.ts" file="src/services/__tests__/auth.test.ts" tests="10" assertions="20" failures="0" skipped="0" time="0" hostname="pc-do-gabs">
+    <testsuite name="Auth Service" file="src/services/__tests__/auth.test.ts" line="9" tests="10" assertions="20" failures="0" skipped="0" time="0" hostname="pc-do-gabs">
+      <testsuite name="login" file="src/services/__tests__/auth.test.ts" line="22" tests="3" assertions="10" failures="0" skipped="0" time="3.003" hostname="pc-do-gabs">
+        <testcase name="should login with existing user email" classname="login &amp;gt; Auth Service" time="1.001006" file="src/services/__tests__/auth.test.ts" line="23" assertions="4" />
+        <testcase name="should create new user if email does not exist" classname="login &amp;gt; Auth Service" time="1.001006" file="src/services/__tests__/auth.test.ts" line="32" assertions="4" />
+        <testcase name="should save user to localStorage after login" classname="login &amp;gt; Auth Service" time="1.001006" file="src/services/__tests__/auth.test.ts" line="41" assertions="2" />
+      </testsuite>
+      <testsuite name="logout" file="src/services/__tests__/auth.test.ts" line="50" tests="2" assertions="5" failures="0" skipped="0" time="3.004" hostname="pc-do-gabs">
+        <testcase name="should remove user data from storage" classname="logout &amp;gt; Auth Service" time="1.503009" file="src/services/__tests__/auth.test.ts" line="51" assertions="3" />
+        <testcase name="should remove session and payment data" classname="logout &amp;gt; Auth Service" time="1.501009" file="src/services/__tests__/auth.test.ts" line="61" assertions="2" />
+      </testsuite>
+      <testsuite name="getCurrentUser" file="src/services/__tests__/auth.test.ts" line="73" tests="2" assertions="2" failures="0" skipped="0" time="1.002" hostname="pc-do-gabs">
+        <testcase name="should return null when no user is logged in" classname="getCurrentUser &amp;gt; Auth Service" time="0" file="src/services/__tests__/auth.test.ts" line="74" assertions="1" />
+        <testcase name="should return current user when logged in" classname="getCurrentUser &amp;gt; Auth Service" time="1.002006" file="src/services/__tests__/auth.test.ts" line="78" assertions="1" />
+      </testsuite>
+      <testsuite name="isAuthenticated" file="src/services/__tests__/auth.test.ts" line="86" tests="3" assertions="3" failures="0" skipped="0" time="2.503" hostname="pc-do-gabs">
+        <testcase name="should return false when no user is logged in" classname="isAuthenticated &amp;gt; Auth Service" time="0" file="src/services/__tests__/auth.test.ts" line="87" assertions="1" />
+        <testcase name="should return true when user is logged in" classname="isAuthenticated &amp;gt; Auth Service" time="1.001006" file="src/services/__tests__/auth.test.ts" line="91" assertions="1" />
+        <testcase name="should return false after logout" classname="isAuthenticated &amp;gt; Auth Service" time="1.502009" file="src/services/__tests__/auth.test.ts" line="96" assertions="1" />
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

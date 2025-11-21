@@ -1,0 +1,15 @@
+dist
+build
+node_modules
+coverage
+.vite
+.vercel
+*.lock
+bun.lock
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+junit.xml
+*.min.js
+*.min.css
+

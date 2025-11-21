@@ -39,7 +39,7 @@ const MOCK_STATIONS: Station[] = [
     available: false,
     connectorType: ['CCS (Combo)', 'Type 2 (Mennekes)'],
     power: 150,
-    pricePerKwh: 1.20,
+    pricePerKwh: 1.2,
     rating: 4.2,
   },
   {
@@ -51,7 +51,7 @@ const MOCK_STATIONS: Station[] = [
     available: true,
     connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)', 'CHAdeMO'],
     power: 50,
-    pricePerKwh: 0.90,
+    pricePerKwh: 0.9,
     rating: 4.6,
   },
   {
@@ -63,7 +63,7 @@ const MOCK_STATIONS: Station[] = [
     available: true,
     connectorType: ['Type 2 (Mennekes)', 'CCS (Combo)'],
     power: 22,
-    pricePerKwh: 1.00,
+    pricePerKwh: 1.0,
     rating: 4.3,
   },
   {
@@ -75,7 +75,7 @@ const MOCK_STATIONS: Station[] = [
     available: true,
     connectorType: ['Type 2 (Mennekes)'],
     power: 22,
-    pricePerKwh: 0.70,
+    pricePerKwh: 0.7,
     rating: 4.7,
   },
   // NOVAS ESTAÇÕES ABC PAULISTA
@@ -96,23 +96,23 @@ const MOCK_STATIONS: Station[] = [
     name: 'Estação Shopping Metrópole',
     address: 'Pça. Samuel Sabatini, 200 - Centro, São Bernardo do Campo - SP',
     latitude: -23.6896, // Perto de São Bernardo (sua cidade natal!)
-    longitude: -46.5670,
+    longitude: -46.567,
     available: false, // Deixando indisponível pra testar o filtro
     connectorType: ['CCS (Combo)', 'CHAdeMO'],
     power: 100,
-    pricePerKwh: 1.10,
+    pricePerKwh: 1.1,
     rating: 4.9,
   },
   {
     id: '9',
     name: 'Estação Park Shopping São Caetano',
     address: 'Estrada das Lágrimas, 855 - São José, São Caetano do Sul - SP',
-    latitude: -23.6300, 
-    longitude: -46.5510,
+    latitude: -23.63,
+    longitude: -46.551,
     available: true,
     connectorType: ['Type 2 (Mennekes)'],
     power: 22,
-    pricePerKwh: 0.80,
+    pricePerKwh: 0.8,
     rating: 4.1,
   },
 ];
