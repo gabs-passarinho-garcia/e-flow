@@ -17,9 +17,8 @@
 }
 
 @layer components {
-  /* Botão Padrão do Design (Preto ou Colorido com texto bold) */
   .btn-primary {
-    @apply w-full bg-primary-400 text-black font-bold text-lg py-4 rounded-2xl transition-transform active:scale-95 shadow-sm hover:brightness-95;
+    @apply w-full bg-primary-400 text-black font-bold text-lg py-4 rounded-2xl transition-transform active:scale-95 shadow-sm hover:brightness-95 flex items-center justify-center;
   }
   
   .input-field {
@@ -27,14 +26,15 @@
   }
 }
 
-/* Leaflet Customizations */
+/* Ajustes do Mapa */
 .leaflet-container {
   height: 100%;
   width: 100%;
   z-index: 0;
+  background-color: #f3f4f6; /* bg-gray-100 */
 }
 
-/* Esconde controles padrão do leaflet para usarmos os customizados */
+/* Ocultar controles padrão para usar os nossos customizados */
 .leaflet-control-zoom, .leaflet-control-attribution {
   display: none;
 }

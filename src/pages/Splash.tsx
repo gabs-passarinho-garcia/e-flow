@@ -19,8 +19,8 @@ export default function Splash() {
 
   return (
     <div className="min-h-screen bg-white relative overflow-hidden flex flex-col items-center justify-center">
-      {/* Formas Geométricas Superiores (Canto Direito) */}
-      <div className="absolute -top-10 -right-10 flex flex-col gap-4 rotate-45 opacity-90">
+      {/* Formas Geométricas Superiores */}
+      <div className="absolute -top-10 -right-10 flex flex-col gap-4 rotate-45 opacity-90 pointer-events-none">
         <div className="flex gap-4">
           <div className="w-24 h-8 bg-secondary-purple rounded-full"></div>
           <div className="w-12 h-8 bg-secondary-blue rounded-full"></div>
@@ -33,15 +33,15 @@ export default function Splash() {
         </div>
       </div>
 
-      {/* Logo Central */}
+      {/* Logo */}
       <div className="z-10 text-center animate-pulse">
-        <h1 className="text-5xl font-black italic tracking-tighter">
+        <h1 className="text-5xl font-black italic tracking-tighter text-gray-900">
           E<span className="text-primary-400">=</span>FLOW
         </h1>
       </div>
 
-      {/* Formas Geométricas Inferiores (Canto Esquerdo) */}
-      <div className="absolute -bottom-10 -left-10 flex flex-col gap-4 rotate-45 opacity-90">
+      {/* Formas Geométricas Inferiores */}
+      <div className="absolute -bottom-10 -left-10 flex flex-col gap-4 rotate-45 opacity-90 pointer-events-none">
         <div className="flex gap-4 mr-8">
           <div className="w-16 h-8 bg-secondary-blue rounded-full"></div>
           <div className="w-24 h-8 bg-secondary-purple rounded-full"></div>

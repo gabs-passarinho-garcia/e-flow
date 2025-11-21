@@ -24,8 +24,8 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-white flex flex-col px-8 pt-16 pb-8">
       
-      {/* Dots de Progresso */}
-      <div className="flex justify-center gap-3 mb-12">
+      {/* Dots de Progresso Decorativos */}
+      <div className="flex justify-center gap-3 mb-12" aria-hidden="true">
         <div className="w-3 h-3 rounded-full bg-primary-400"></div>
         <div className="w-3 h-3 rounded-full bg-secondary-purple"></div>
         <div className="w-3 h-3 rounded-full bg-secondary-orange"></div>
@@ -46,12 +46,14 @@ export default function Login() {
         <input
           type="text"
           placeholder="Nome"
+          aria-label="Nome"
           className="input-field"
         />
         
         <input
           type="email"
           placeholder="E-mail"
+          aria-label="Endereço de E-mail"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="input-field"
@@ -60,6 +62,7 @@ export default function Login() {
         <input
           type="password"
           placeholder="Senha"
+          aria-label="Senha"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           className="input-field"
@@ -82,25 +85,25 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Social Login Mock */}
+        {/* Botões Sociais */}
         <div className="space-y-3">
           <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-gray-300 rounded-2xl hover:bg-gray-50 transition-colors">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="Google" />
+            <img src="https://www.svgrepo.com/show/475656/google-color.svg" className="w-5 h-5" alt="" aria-hidden="true" />
             <span className="text-gray-600 font-medium text-sm">Continue com sua conta Google</span>
           </button>
           <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 px-4 border border-gray-300 rounded-2xl hover:bg-gray-50 transition-colors">
-            <img src="https://www.svgrepo.com/show/355117/microsoft.svg" className="w-5 h-5" alt="Microsoft" />
+            <img src="https://www.svgrepo.com/show/355117/microsoft.svg" className="w-5 h-5" alt="" aria-hidden="true" />
             <span className="text-gray-600 font-medium text-sm">Continue com sua conta Microsoft</span>
           </button>
           <button type="button" className="w-full flex items-center justify-center gap-3 py-3.5 px-4 bg-black text-white rounded-2xl hover:bg-gray-800 transition-colors">
-            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.74.62 3.48 1.56-3.17 1.63-2.66 5.76.36 7.1-.71 1.73-1.69 3.41-2.43 4.37zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
+            <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24" aria-hidden="true"><path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.78 1.18-.19 2.31-.89 3.51-.84 1.54.06 2.74.62 3.48 1.56-3.17 1.63-2.66 5.76.36 7.1-.71 1.73-1.69 3.41-2.43 4.37zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/></svg>
             <span className="text-white font-medium text-sm">Continue com sua conta Apple</span>
           </button>
         </div>
       </form>
 
       <p className="text-center mt-8 text-gray-500 text-sm">
-        Já possui uma conta? <button onClick={() => navigate('/login')} className="text-secondary-purple font-bold underline">Entrar</button>
+        Já possui uma conta? <button type="button" onClick={() => navigate('/login')} className="text-secondary-purple font-bold underline">Entrar</button>
       </p>
     </div>
   );

@@ -8,20 +8,20 @@ export default {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#D9F804', // O Verde Neon do botão "Registre-se"
+          DEFAULT: '#D9F804', // O Verde Neon principal
           50: '#FBFEEO',
           100: '#F7FDC8',
           200: '#EEFB9B',
           300: '#E4F963',
-          400: '#D9F804', // Main Brand Color
+          400: '#D9F804', // Use este para botões principais
           500: '#B5CF03',
           600: '#92A702',
           900: '#1A1A1A',
         },
         secondary: {
-          purple: '#5B4EFF', // Roxo dos detalhes (barras de progresso)
-          blue: '#89CFF0',   // Azul claro das formas
-          orange: '#FF5F2D', // Laranja dos detalhes
+          purple: '#5B4EFF', // Roxo (rotas/detalhes)
+          blue: '#89CFF0',   // Azul claro
+          orange: '#FF5F2D', // Laranja
         },
         gray: {
           50: '#F9F9F9',
@@ -35,7 +35,7 @@ export default {
         sans: ['Inter', 'sans-serif'],
       },
       boxShadow: {
-        'float': '0 10px 30px -10px rgba(0, 0, 0, 0.1)',
+        'float': '0 10px 30px -10px rgba(0, 0, 0, 0.15)', // Sombra mais marcada para elementos flutuantes
         'nav': '0 -4px 20px rgba(0,0,0,0.05)',
       },
       borderRadius: {
