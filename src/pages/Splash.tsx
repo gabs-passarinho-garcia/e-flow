@@ -53,9 +53,7 @@ export default function Splash(): JSX.Element {
 
       {/* === LOGO CENTRAL === */}
       <div className="z-10 text-center flex flex-col items-center animate-fade-in-up mt-8">
-        <h1 className="text-7xl font-black italic tracking-tighter text-black mb-2">
-          E<span className="text-black">=</span>FLOW
-        </h1>
+        <img src="/assets/svg/e-flow.svg" alt="E-Flow Logo" className="mb-2 w-auto h-16 sm:h-20" />
         {/* Spinner */}
         <div className="mt-8 flex gap-3">
           <div
