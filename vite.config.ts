@@ -25,17 +25,19 @@ export default defineConfig({
         start_url: '/',
         icons: [
           {
-            src: 'icons/pwa-192x192.png',
+            src: 'e-flow-icon.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
-            src: 'icons/pwa-512x512.png',
+            src: 'e-flow-icon.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           },
           {
-            src: 'icons/pwa-512x512.png',
+            src: 'e-flow-icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
